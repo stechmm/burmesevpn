@@ -46,6 +46,12 @@
   - ⚙️ **Key Settings Form**: Data Reset, +30 Days Extend, Toggle Active/Pause စသည်တို့ကို Web Form မှ တိုက်ရိုက် စီမံနိုင်ခြင်း။
   - 📥 **Batch Export & Subscription**: Keys အားလုံးကို 1-Click .txt export လုပ်နိုင်ပြီး `/sub/{key_id}` မှတစ်ဆင့် App အတွင်း Data လက်ကျန်နှင့် သက်တမ်း တိုက်ရိုက် ကြည့်ရှုနိုင်ခြင်း။
 
+### 3. 🛡️ Automated High-Load Mitigation & Self-Healing Engine (ဝန်အားမြင့်တက်မှု အလိုအလျောက် ဖြေရှင်းသည့်စနစ်)
+- 🧠 **Kernel & Socket Auto-Tuning**: `somaxconn 65535`၊ `nofile 65535`၊ `64MB TCP Buffer` ဖြင့် User ထောင်ချီ တစ်ပြိုင်နက် ချိတ်ဆက်ချိန်တွင် connection ကျမသွားအောင် ကာကွယ်ခြင်း။
+- ⚡ **Auto-Watchdog & Memory Reclamation**: RAM > 80% သို့မဟုတ် CPU Spike ဖြစ်ပေါ်ချိန်တွင် Inactive Cache များ၊ Expired Session များနှင့် Zombie Object များကို အလိုအလျောက် Garbage Collection & Kernel Cache Flush ပြုလုပ်ပေးခြင်း။
+- 🛡️ **Anti-DDoS & SYN-Shield**: `tcp_syncookies = 1`၊ `tcp_tw_reuse = 1` ဖြင့် Bot / Attack spike များကို အလိုအလျောက် ခံနိုင်ရည်ရှိအောင် ကာကွယ်ခြင်း။
+- 🚦 **Adaptive Rate Limiter**: Brute-force နှင့် Subscription scraping များကို In-memory Sliding Window ဖြင့် အလိုအလျောက် throttle ထိန်းချုပ်ခြင်း။
+
 ---
 
 ## 🚀 VPS ပေါ်တွင် ၁ ချက်နှိပ် တင်ဆင်နည်း (1-Click Linux VPS Deployment)

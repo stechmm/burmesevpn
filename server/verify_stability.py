@@ -67,14 +67,20 @@ def test_all():
     # 7. Test Batch Keys Export
     exp = opener.open(f'{BASE}/api/keys/export').read().decode('utf-8')
     assert len(exp.strip()) > 0
-    print(f"[PASS] 7/8 Batch Keys Export API: 200 OK")
+    print(f"[PASS] 7/9 Batch Keys Export API: 200 OK")
 
-    # 8. Test Logout Action
+    # 8. Test Automated High-Load Server Optimization & Watchdog
+    opt_req = urllib.request.Request(f'{BASE}/api/server/optimize', data=b"{}", headers={'Content-Type': 'application/json'})
+    opt_res = json.loads(opener.open(opt_req).read().decode('utf-8'))
+    assert opt_res.get('success') is True
+    print(f"[PASS] 8/9 High-Load Auto-Mitigation Engine: 200 OK ({opt_res.get('garbage_collected_objects')} objects collected)")
+
+    # 9. Test Logout Action
     logout_res = opener.open(f'{BASE}/logout')
     assert '/login' in logout_res.geturl() or logout_res.status == 200
-    print("[PASS] 8/8 Logout & Session Revocation: 200 OK")
+    print("[PASS] 9/9 Logout & Session Revocation: 200 OK")
 
-    print("[SUCCESS] All 8/8 Multi-VPN & Authentication Tests Passed Successfully!")
+    print("[SUCCESS] All 9/9 High-Load, Multi-VPN & Auth Tests Passed Successfully!")
 
 if __name__ == '__main__':
     test_all()

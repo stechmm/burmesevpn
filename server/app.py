@@ -1,19 +1,22 @@
 import os
 import io
 import json
+import time
 import base64
 import jinja2
 from fastapi import FastAPI, Request, Form, HTTPException, Depends, status
 from fastapi.responses import HTMLResponse, PlainTextResponse, Response, JSONResponse, FileResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.gzip import GZipMiddleware
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Dict
 
 from wg_manager import WireGuardManager
 from key_manager import AccessKeyManager
 from auth import AuthManager
+from watchdog import watchdog_engine
 
 app = FastAPI(title="Burmese VPN - Dual-Engine Hub")
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
@@ -28,12 +31,36 @@ wg_manager = WireGuardManager()
 key_manager = AccessKeyManager()
 auth_manager = AuthManager()
 
+# ================= High-Load Rate Limiter =================
+RATE_LIMIT_STORE: Dict[str, list] = {}
+
+def apply_rate_limit(request: Request, max_reqs: int = 120, window_secs: int = 60):
+    client_ip = request.client.host if request.client else "unknown"
+    now = time.time()
+    if client_ip not in RATE_LIMIT_STORE:
+        RATE_LIMIT_STORE[client_ip] = []
+    
+    RATE_LIMIT_STORE[client_ip] = [t for t in RATE_LIMIT_STORE[client_ip] if now - t < window_secs]
+    if len(RATE_LIMIT_STORE[client_ip]) >= max_reqs:
+        raise HTTPException(
+            status_code=429,
+            detail="Rate limit exceeded. Please wait a moment before sending more requests."
+        )
+    RATE_LIMIT_STORE[client_ip].append(now)
+
+@app.on_event("startup")
+def on_startup():
+    watchdog_engine.start()
+
+@app.on_event("shutdown")
+def on_shutdown():
+    watchdog_engine.stop()
+
 # ================= Auth Dependency =================
 
 def is_authenticated(request: Request) -> bool:
     session_token = request.cookies.get("session_token")
     if not session_token:
-        # Also check Authorization header Bearer token
         auth_header = request.headers.get("Authorization")
         if auth_header and auth_header.startswith("Bearer "):
             session_token = auth_header.split(" ")[1]
@@ -79,13 +106,15 @@ class TrafficSimulateRequest(BaseModel):
 
 @app.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request, error: Optional[str] = None):
+    apply_rate_limit(request, max_reqs=30, window_secs=60)
     if is_authenticated(request):
         return RedirectResponse(url="/", status_code=302)
     template = jinja_env.get_template("login.html")
     return HTMLResponse(content=template.render(error=error))
 
 @app.post("/login")
-async def login_action(username: str = Form(...), password: str = Form(...)):
+async def login_action(request: Request, username: str = Form(...), password: str = Form(...)):
+    apply_rate_limit(request, max_reqs=15, window_secs=60)
     token = auth_manager.authenticate(username, password)
     if not token:
         template = jinja_env.get_template("login.html")
@@ -122,6 +151,7 @@ async def index(request: Request):
     server_info = wg_manager.get_server_info()
     router_clients = wg_manager.get_clients()
     mobile_keys = key_manager.get_all_keys()
+    watchdog_metrics = watchdog_engine.get_metrics()
     
     template = jinja_env.get_template("index.html")
     html_content = template.render(
@@ -130,7 +160,8 @@ async def index(request: Request):
         total_routers=len(router_clients),
         mobile_keys=mobile_keys,
         total_keys=len(mobile_keys),
-        active_keys=sum(1 for k in mobile_keys if k.get("status") == "active")
+        active_keys=sum(1 for k in mobile_keys if k.get("status") == "active"),
+        watchdog=watchdog_metrics
     )
     return HTMLResponse(content=html_content)
 
@@ -159,7 +190,7 @@ async def api_delete_router(client_id: str, auth=Depends(require_admin_api)):
     wg_manager.delete_client(client_id)
     return {"success": True, "message": "Router gateway removed"}
 
-# Router script generators (Public for 1-click execution or tokenized access)
+# Router script generators (Public for 1-click execution)
 @app.get("/api/routers/{client_id}/openwrt")
 async def api_get_openwrt(client_id: str):
     script = wg_manager.generate_openwrt_script(client_id)
@@ -277,7 +308,8 @@ async def api_simulate_traffic(key_id: str, data: TrafficSimulateRequest, auth=D
 
 # Subscription link endpoint for mobile apps (v2rayNG, Shadowrocket, Sing-box, Clash, Outline)
 @app.get("/sub/{key_id}")
-async def api_get_subscription(key_id: str):
+async def api_get_subscription(key_id: str, request: Request):
+    apply_rate_limit(request, max_reqs=60, window_secs=60)
     keys = key_manager.get_all_keys()
     key = next((k for k in keys if k["id"] == key_id), None)
     if not key:
@@ -313,16 +345,24 @@ async def api_get_live_status(auth=Depends(require_admin_api)):
     server_info = wg_manager.get_server_info()
     router_clients = wg_manager.get_clients()
     mobile_keys = key_manager.get_all_keys()
+    watchdog_metrics = watchdog_engine.get_metrics()
     return {
         "server": server_info,
         "total_routers": len(router_clients),
         "total_keys": len(mobile_keys),
         "active_keys": sum(1 for k in mobile_keys if k.get("status") == "active"),
+        "watchdog": watchdog_metrics,
         "keys": mobile_keys,
         "routers": router_clients
     }
 
-# ================= General Server Settings =================
+# ================= Automated High-Load Optimization & Server Settings =================
+
+@app.post("/api/server/optimize")
+async def api_optimize_server(auth=Depends(require_admin_api)):
+    """Trigger manual instant memory reclamation & garbage collection"""
+    res = watchdog_engine.trigger_optimization(reason="Admin Manual 1-Click Optimization")
+    return res
 
 @app.post("/api/server/settings")
 async def api_update_settings(data: ServerSettingsRequest, auth=Depends(require_admin_api)):
@@ -341,5 +381,6 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8080))
     host = os.environ.get("HOST", "0.0.0.0")
-    print(f"🚀 Starting Dual-Engine VPN Hub on http://{host}:{port}")
+    workers = max(1, min(4, os.cpu_count() or 1))
+    print(f"🚀 Starting Dual-Engine VPN Hub on http://{host}:{port} with {workers} workers")
     uvicorn.run("app:app", host=host, port=port, reload=True)

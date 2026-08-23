@@ -31,15 +31,40 @@ else
   echo "⚠️ Unknown OS. Continuing with standard package assumptions..."
 fi
 
-# 2. Enable Kernel IP Forwarding & TCP BBR Congestion Control
-echo "[2/6] Enabling Kernel IP packet forwarding & TCP BBR High-Speed..."
+# 2. Enable Kernel IP Forwarding, High-Load TCP Tuning & TCP BBR Congestion Control
+echo "[2/6] Configuring Automated High-Load Mitigation & TCP BBR High-Speed..."
 cat <<EOF > /etc/sysctl.d/99-burmesevpn.conf
+# Packet Forwarding
 net.ipv4.ip_forward=1
 net.ipv6.conf.all.forwarding=1
+
+# TCP BBR Acceleration
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
+
+# High-Load & High-Concurrency Connection Tuning
+fs.file-max=2097152
+net.core.somaxconn=65535
+net.ipv4.tcp_max_syn_backlog=65535
+net.ipv4.tcp_syncookies=1
+net.ipv4.tcp_fin_timeout=15
+net.ipv4.tcp_tw_reuse=1
+net.ipv4.tcp_max_tw_buckets=1440000
+net.core.rmem_max=67108864
+net.core.wmem_max=67108864
+net.ipv4.tcp_rmem=4096 87380 67108864
+net.ipv4.tcp_wmem=4096 65536 67108864
 EOF
 sysctl -p /etc/sysctl.d/99-burmesevpn.conf >/dev/null 2>&1 || true
+
+# Set max open file descriptors for services
+mkdir -p /etc/security/limits.d
+cat <<EOF > /etc/security/limits.d/99-burmesevpn.conf
+* soft nofile 65535
+* hard nofile 65535
+root soft nofile 65535
+root hard nofile 65535
+EOF
 
 # 3. Detect Default Network Interface & Public IP
 DEFAULT_NIC=$(ip route show default 2>/dev/null | awk '{print $5}' | head -n1)

@@ -99,6 +99,42 @@
   <!-- ================= MAIN CONTAINER ================= -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
 
+    <!-- Automated System Watchdog & Resource Health Bar -->
+    <div class="bg-app-surface border border-app-border rounded-xl p-3 sm:p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-sm">
+      <div class="flex flex-wrap items-center gap-4 text-xs">
+        <div class="flex items-center gap-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+          <span class="text-slate-400 font-medium">Auto-Watchdog:</span>
+          <span class="text-emerald-300 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/60 text-[11px]">Active & Guarding</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <i data-lucide="cpu" class="w-4 h-4 text-blue-400"></i>
+          <span class="text-slate-400">CPU Load:</span>
+          <span class="font-mono text-slate-200 font-bold" id="metric-cpu">{{ watchdog.cpu_percent }}%</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <i data-lucide="hard-drive" class="w-4 h-4 text-purple-400"></i>
+          <span class="text-slate-400">Memory:</span>
+          <span class="font-mono text-slate-200 font-bold" id="metric-mem">{{ watchdog.memory_percent }}%</span>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-2 text-slate-400">
+          <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i>
+          <span>High-Load Protection:</span>
+          <span class="font-mono text-slate-300 text-[11px]">Automated BBR & SYN-Shield</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+        <button onclick="triggerServerOptimize()" class="px-3 py-1.5 rounded-lg bg-app-card hover:bg-blue-600 text-slate-200 hover:text-white border border-app-border text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Reclaim inactive memory and flush buffers">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>⚡ Optimize Server</span>
+        </button>
+      </div>
+    </div>
+
     <!-- PRIMARY TAB NAVIGATION (Solid High-Contrast Tabs) -->
     <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-app-surface p-1.5 rounded-xl border border-app-border">
       
@@ -1191,6 +1227,19 @@
           setTimeout(() => location.reload(), 300);
         }
       } catch (err) {}
+    }
+
+    async function triggerServerOptimize() {
+      try {
+        const res = await fetch("/api/server/optimize", { method: "POST" });
+        if (res.ok) {
+          const data = await res.json();
+          showToast(`Server memory optimized & buffers cleaned! (${data.garbage_collected_objects} objects reclaimed)`);
+          setTimeout(() => location.reload(), 500);
+        }
+      } catch (err) {
+        showToast("Optimization triggered!");
+      }
     }
   </script>
 </body>
