@@ -1,0 +1,82 @@
+# 🇲🇲 Burmese VPN - PC Desktop Client Configuration & Setup Guide
+# Supports: Windows 10/11, macOS (Apple Silicon / Intel), Linux
+
+port: 7890
+socks-port: 7891
+allow-lan: false
+mode: rule
+log-level: info
+external-controller: '127.0.0.1:9090'
+
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  enhanced-mode: fake-ip
+  nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+  fallback:
+    - 1.0.0.1
+    - 8.8.4.4
+
+proxies:
+  - name: "🇸🇬 Singapore SG-01 (Direct Fiber)"
+    type: ss
+    server: {SERVER_HOST}
+    port: {PORT}
+    cipher: {CIPHER}
+    password: "{PASSWORD}"
+    udp: true
+
+  - name: "🇯🇵 Tokyo JP-01 (Express Gaming)"
+    type: ss
+    server: jp1.burmesevpn.com
+    port: {PORT}
+    cipher: {CIPHER}
+    password: "{PASSWORD}"
+    udp: true
+
+  - name: "🇺🇸 Silicon Valley US-01 (High Speed)"
+    type: ss
+    server: us1.burmesevpn.com
+    port: {PORT}
+    cipher: {CIPHER}
+    password: "{PASSWORD}"
+    udp: true
+
+  - name: "🇩🇪 Frankfurt DE-01 (Europe Core)"
+    type: ss
+    server: de1.burmesevpn.com
+    port: {PORT}
+    cipher: {CIPHER}
+    password: "{PASSWORD}"
+    udp: true
+
+proxy-groups:
+  - name: "🚀 Burmese VPN"
+    type: select
+    proxies:
+      - "⚡ Auto Best Latency"
+      - "🇸🇬 Singapore SG-01 (Direct Fiber)"
+      - "🇯🇵 Tokyo JP-01 (Express Gaming)"
+      - "🇺🇸 Silicon Valley US-01 (High Speed)"
+      - "🇩🇪 Frankfurt DE-01 (Europe Core)"
+      - DIRECT
+
+  - name: "⚡ Auto Best Latency"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+      - "🇸🇬 Singapore SG-01 (Direct Fiber)"
+      - "🇯🇵 Tokyo JP-01 (Express Gaming)"
+      - "🇺🇸 Silicon Valley US-01 (High Speed)"
+      - "🇩🇪 Frankfurt DE-01 (Europe Core)"
+
+rules:
+  - DOMAIN-SUFFIX,local,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  - IP-CIDR,172.16.0.0/12,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT
+  - IP-CIDR,10.0.0.0/8,DIRECT
+  - MATCH,🚀 Burmese VPN

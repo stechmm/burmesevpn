@@ -96,12 +96,17 @@ def test_all():
     assert opt_res.get('success') is True
     print(f"[PASS] 9/10 High-Load Auto-Mitigation Engine: 200 OK ({opt_res.get('garbage_collected_objects')} objects collected)")
 
-    # 10. Test Logout Action
+    # 10. Test PC Desktop Clash Profile Generator
+    clash_res = opener.open(f'{BASE}/api/keys/{first_key["id"]}/clash').read().decode('utf-8')
+    assert 'Burmese VPN' in clash_res and 'proxies:' in clash_res and 'type: ss' in clash_res
+    print("[PASS] 10/11 PC Desktop Clash / Clash Verge Profile Generator: 200 OK")
+
+    # 11. Test Logout Action
     logout_res = opener.open(f'{BASE}/logout')
     assert '/login' in logout_res.geturl() or logout_res.status == 200
-    print("[PASS] 10/10 Logout & Session Revocation: 200 OK")
+    print("[PASS] 11/11 Logout & Session Revocation: 200 OK")
 
-    print("[SUCCESS] All 10/10 Multi-Node, High-Load, Multi-VPN & Auth Tests Passed Successfully!")
+    print("[SUCCESS] All 11/11 PC Desktop, Multi-Node, High-Load & Auth Tests Passed Successfully!")
 
 if __name__ == '__main__':
     test_all()

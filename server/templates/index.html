@@ -357,9 +357,13 @@
                     </div>
                   </td>
 
-                  <!-- 7. Actions Row (Opens Settings Form Modal) -->
-                  <td class="py-3.5 px-4 text-right whitespace-nowrap">
-                    <button onclick="openKeySettingsModal('{{ key.id }}', '{{ key.name }}', {{ key.data_limit_gb }}, {{ key.max_devices }}, {{ 'true' if key.enabled else 'false' }}, '{{ key.used_readable }}', '{{ key.limit_readable }}', '{{ key.expire_date }}', '{{ key.time_left_readable }}')" class="px-3.5 py-1.5 rounded-lg bg-app-card hover:bg-blue-600 text-slate-200 hover:text-white border border-app-border hover:border-blue-500 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
+                  <!-- 7. Actions Row (Opens Settings Form Modal & PC Setup) -->
+                  <td class="py-3.5 px-4 text-right whitespace-nowrap space-x-1.5">
+                    <button onclick="openPcSetupModal('{{ key.id }}', '{{ key.name }}', '{{ key.access_url }}')" class="px-3 py-1.5 rounded-lg bg-app-card hover:bg-emerald-600 text-slate-200 hover:text-white border border-app-border hover:border-emerald-500 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95" title="PC Desktop Setup (Windows / Mac / Linux)">
+                      <i data-lucide="monitor" class="w-3.5 h-3.5 text-emerald-400"></i>
+                      <span>PC Setup</span>
+                    </button>
+                    <button onclick="openKeySettingsModal('{{ key.id }}', '{{ key.name }}', {{ key.data_limit_gb }}, {{ key.max_devices }}, {{ 'true' if key.enabled else 'false' }}, '{{ key.used_readable }}', '{{ key.limit_readable }}', '{{ key.expire_date }}', '{{ key.time_left_readable }}')" class="px-3 py-1.5 rounded-lg bg-app-card hover:bg-blue-600 text-slate-200 hover:text-white border border-app-border hover:border-blue-500 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
                       <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
                       <span>Settings</span>
                     </button>
@@ -956,6 +960,74 @@
     </div>
   </div>
 
+  <!-- Modal: PC Setup Modal -->
+  <div id="modal-pc-setup" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-2xl max-w-xl w-full p-6 border border-app-border shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b border-app-border pb-3.5">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="monitor" class="w-4 h-4 text-emerald-400"></i>
+          <span>PC Desktop Client Setup (Windows / macOS / Linux)</span>
+        </h3>
+        <button onclick="closeModal('modal-pc-setup')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        
+        <!-- Method 1: Outline PC -->
+        <div class="p-4 rounded-xl bg-app-bg border border-app-border space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-100 flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px]">1</span>
+              Outline PC Client (အလွယ်ဆုံး ၁ ချက်နှိပ်ချိတ်ဆက်နည်း)
+            </span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60">Recommended</span>
+          </div>
+          <p class="text-slate-400 text-[11px]">Outline Windows/Mac app တွင် အောက်ပါ Key ကို Copy ကူးပြီး ထည့်သွင်းရုံဖြင့် တစ်ကွန်ပျူတာလုံး VPN အလိုအလျောက် ပွင့်သွားပါမည်။</p>
+          <div class="flex items-center gap-2 bg-[#0c1017] p-2 rounded-lg border border-app-border">
+            <input type="text" id="pc-outline-key" readonly class="bg-transparent text-[11px] font-mono text-blue-300 truncate w-full focus:outline-none select-all">
+            <button onclick="copyToClipboard(document.getElementById('pc-outline-key').value, 'Outline Key Copied!')" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1 shrink-0">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
+            </button>
+          </div>
+          <div class="flex items-center gap-2 text-[11px] text-slate-400">
+            <span>Download App:</span>
+            <a href="https://getoutline.org/get-outline/#windows-app" target="_blank" class="text-blue-400 hover:underline font-bold">Windows (.exe)</a> •
+            <a href="https://getoutline.org/get-outline/#macos-app" target="_blank" class="text-blue-400 hover:underline font-bold">macOS (.dmg)</a> •
+            <a href="https://getoutline.org/get-outline/#linux-app" target="_blank" class="text-blue-400 hover:underline font-bold">Linux</a>
+          </div>
+        </div>
+
+        <!-- Method 2: Clash Verge / v2rayN PC -->
+        <div class="p-4 rounded-xl bg-app-bg border border-app-border space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-100 flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full bg-amber-600 text-white flex items-center justify-center text-[10px]">2</span>
+              Clash Verge / v2rayN PC (Multi-Node SG/JP/US/DE & Gaming)
+            </span>
+          </div>
+          <p class="text-slate-400 text-[11px]">Clash Verge Rev သို့မဟုတ် v2rayN တွင် Node ၄ ခုလုံး (SG/JP/US/DE) ပါဝင်ပြီး Auto Fast-Ping ရွေးချယ်ပေးမည့် Profile ကို ဒေါင်းလုဒ်ရယူပါ။</p>
+          <div class="flex flex-wrap items-center gap-2">
+            <a id="pc-clash-download" href="#" class="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold flex items-center gap-1.5 transition">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Download Clash Profile (.yaml)</span>
+            </a>
+            <button onclick="copyToClipboard(currentPcSubUrl, 'Subscription URL copied! Paste into Clash or v2rayN.')" class="px-3.5 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-200 font-semibold border border-app-border flex items-center gap-1.5 transition">
+              <i data-lucide="link" class="w-4 h-4 text-emerald-400"></i>
+              <span>Copy Subscription URL</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="closeModal('modal-pc-setup')" class="px-5 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Close</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal 3: QR Code Modal -->
   <div id="modal-qr" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-app-surface rounded-xl max-w-sm w-full p-6 border border-app-border shadow-2xl text-center space-y-4">
@@ -1317,6 +1389,16 @@
           setTimeout(() => location.reload(), 300);
         }
       } catch (err) {}
+    }
+
+    let currentPcSubUrl = "";
+
+    function openPcSetupModal(keyId, keyName, accessUrl) {
+      document.getElementById("pc-outline-key").value = accessUrl;
+      document.getElementById("pc-clash-download").href = `/api/keys/${keyId}/clash`;
+      currentPcSubUrl = `${window.location.origin}/sub/${keyId}`;
+      openModal("modal-pc-setup");
+      lucide.createIcons();
     }
 
     function viewAccessKeyQR(id, name, url) {

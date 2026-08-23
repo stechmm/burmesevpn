@@ -60,6 +60,11 @@
 - 🔄 **Unified Dynamic Subscription**: User သည် Key ၁ ခုတည်းဖြင့် `/sub/{key_id}` မှတစ်ဆင့် App (v2rayNG/Shadowrocket/Outline) ထဲတွင် နိုင်ငံအားလုံး (SG/JP/US/DE) သို့ 1-Tap ဖြင့် စိတ်ကြိုက် ပြောင်းလဲ အသုံးပြုနိုင်ခြင်း။
 - ➕ **Edge Node Expansion**: Web Dashboard မှ `+ Add Server Node` ဖြင့် Node အသစ်များကို လိုသလို ထပ်မံ ချဲ့ထွင်နိုင်ခြင်း။
 
+### 5. 🖥️ PC Desktop Version Setup (Windows / macOS / Linux)
+- 🌟 **Outline PC (1-Click Connect)**: Official Outline Windows/Mac Client ထဲသို့ Key paste လုပ်ရုံဖြင့် တစ်ကွန်ပျူတာလုံး VPN အလိုအလျောက် ပွင့်ခြင်း။
+- 🚀 **Clash Verge / v2rayN Profile**: Dashboard ရှိ `🖥️ PC Setup` မှတစ်ဆင့် နိုင်ငံစုံ Node (SG/JP/US/DE) ပါဝင်သော `burmesevpn_clash.yaml` ကို download လုပ်ပြီး Auto-Ping ရွေးချယ် အသုံးပြုနိုင်ခြင်း။
+- 🛡️ **WireGuard PC Client**: Native WireGuard `.conf` ဖြင့် Windows/Mac ပေါ်တွင် Kernel-Level Speed ဖြင့် အသုံးပြုနိုင်ခြင်း။
+
 ---
 
 ## 🚀 VPS ပေါ်တွင် ၁ ချက်နှိပ် တင်ဆင်နည်း (1-Click Linux VPS Deployment)

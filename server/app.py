@@ -408,6 +408,88 @@ async def api_get_subscription(key_id: str, request: Request):
     }
     return Response(content=b64_content, media_type="text/plain; charset=utf-8", headers=headers)
 
+# PC Desktop Clash / Clash Verge Profile Generator
+@app.get("/api/keys/{key_id}/clash")
+async def api_get_clash_config(key_id: str):
+    keys = key_manager.get_all_keys()
+    key = next((k for k in keys if k["id"] == key_id), None)
+    if not key:
+        raise HTTPException(status_code=404, detail="Key not found")
+    
+    nodes = node_manager.get_all_nodes()
+    cipher = key.get("cipher", "chacha20-ietf-poly1305")
+    password = key.get("password", "")
+    port = key.get("port", 8388)
+    
+    proxy_entries = []
+    proxy_names = []
+    
+    for node in nodes:
+        if node.get("status") == "online":
+            flag = node.get("flag", "🌐")
+            node_name = f"{flag} {node.get('name', 'Node')}"
+            endpoint = node.get("endpoint", "127.0.0.1")
+            proxy_names.append(f'      - "{node_name}"')
+            proxy_entries.append(f"""  - name: "{node_name}"
+    type: ss
+    server: {endpoint}
+    port: {port}
+    cipher: {cipher}
+    password: "{password}"
+    udp: true""")
+            
+    proxies_yaml = "\n\n".join(proxy_entries)
+    proxy_names_yaml = "\n".join(proxy_names)
+    
+    clash_yaml = f"""# 🇲🇲 Burmese VPN - Clash / Clash Verge Desktop Profile
+port: 7890
+socks-port: 7891
+allow-lan: false
+mode: rule
+log-level: info
+external-controller: '127.0.0.1:9090'
+
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  enhanced-mode: fake-ip
+  nameserver:
+    - 1.1.1.1
+    - 8.8.8.8
+
+proxies:
+{proxies_yaml}
+
+proxy-groups:
+  - name: "🚀 Burmese VPN"
+    type: select
+    proxies:
+      - "⚡ Auto Best Latency"
+{proxy_names_yaml}
+      - DIRECT
+
+  - name: "⚡ Auto Best Latency"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    proxies:
+{proxy_names_yaml}
+
+rules:
+  - DOMAIN-SUFFIX,local,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT
+  - IP-CIDR,172.16.0.0/12,DIRECT
+  - IP-CIDR,192.168.0.0/16,DIRECT
+  - IP-CIDR,10.0.0.0/8,DIRECT
+  - MATCH,🚀 Burmese VPN
+"""
+    filename = f"burmesevpn_{key.get('name', 'pc').replace(' ', '_')}.yaml"
+    return Response(
+        content=clash_yaml,
+        media_type="text/yaml",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
 @app.get("/api/keys/export")
 async def api_export_keys(auth=Depends(require_admin_api)):
     keys = key_manager.get_all_keys()
