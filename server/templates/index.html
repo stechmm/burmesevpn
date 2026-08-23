@@ -138,24 +138,31 @@
     <!-- PRIMARY TAB NAVIGATION (Solid High-Contrast Tabs) -->
     <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-app-surface p-1.5 rounded-xl border border-app-border">
       
-      <div class="flex items-center space-x-1.5">
+      <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 sm:pb-0">
         <!-- Tab 1: Mobile Keys -->
-        <button onclick="switchTab('mobile')" id="tab-btn-mobile" class="px-5 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-sm">
+        <button onclick="switchTab('mobile')" id="tab-btn-mobile" class="px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-sm whitespace-nowrap">
           <i data-lucide="smartphone" class="w-4 h-4"></i>
-          <span>📱 Mobile Access Keys (Outline / V2Ray)</span>
+          <span>📱 Mobile Keys</span>
           <span class="ml-1 px-2 py-0.5 rounded text-[10px] bg-black/20 font-mono">{{ total_keys }}</span>
         </button>
 
         <!-- Tab 2: Routers -->
-        <button onclick="switchTab('router')" id="tab-btn-router" class="px-5 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card">
+        <button onclick="switchTab('router')" id="tab-btn-router" class="px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap">
           <i data-lucide="router" class="w-4 h-4"></i>
-          <span>🌐 Router Gateways (OpenWrt / MikroTik / H3C)</span>
+          <span>🌐 Router Gateways</span>
           <span class="ml-1 px-2 py-0.5 rounded text-[10px] bg-app-bg font-mono text-slate-400">{{ total_routers }}</span>
+        </button>
+
+        <!-- Tab 3: Server Nodes -->
+        <button onclick="switchTab('node')" id="tab-btn-node" class="px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap">
+          <i data-lucide="globe" class="w-4 h-4"></i>
+          <span>🌍 Server Nodes (US/SG/JP/DE)</span>
+          <span class="ml-1 px-2 py-0.5 rounded text-[10px] bg-app-bg font-mono text-slate-400">{{ total_nodes }}</span>
         </button>
       </div>
 
       <!-- Action Button based on Tab -->
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 shrink-0">
         <div id="tab-action-mobile" class="flex items-center gap-2">
           <a href="/api/keys/export" download class="px-3.5 py-2.5 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-200 hover:text-white text-xs font-bold border border-app-border flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm" title="Export all active keys as .txt file">
             <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i>
@@ -163,7 +170,7 @@
           </a>
           <button onclick="openAddKeyModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm">
             <i data-lucide="plus" class="w-4 h-4"></i>
-            <span>Create New Access Key</span>
+            <span>Create Key</span>
           </button>
         </div>
 
@@ -171,6 +178,13 @@
           <button onclick="openAddRouterModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span>Add Router Gateway</span>
+          </button>
+        </div>
+
+        <div id="tab-action-node" class="hidden">
+          <button onclick="openAddNodeModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Add Server Node</span>
           </button>
         </div>
       </div>
@@ -533,6 +547,133 @@
                 </tr>
               {% endif %}
             </tbody>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- VIEW 3: SERVER NODES CLUSTER (US / SG / JP / DE) - LIST VIEW -->
+    <!-- ============================================================== -->
+    <div id="view-node" class="space-y-5 hidden">
+      
+      <!-- Nodes Overview Info Bar -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Active Nodes</div>
+            <div class="text-2xl font-black text-white mt-1">{{ total_nodes }} Regions</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-emerald-600/10 text-emerald-400 border border-emerald-500/20">
+            <i data-lucide="globe" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Master Hub Endpoint</div>
+            <div class="text-base font-bold font-mono text-slate-200 mt-1">{{ server.endpoint }}</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-blue-600/10 text-blue-400 border border-blue-500/20">
+            <i data-lucide="server" class="w-5 h-5"></i>
+          </div>
+        </div>
+
+        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Multi-Node Subscriptions</div>
+            <div class="text-sm font-bold text-emerald-400 mt-1">Unified Multi-Region Export</div>
+          </div>
+          <div class="p-2.5 rounded-lg bg-purple-600/10 text-purple-400 border border-purple-500/20">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Server Nodes Table -->
+      <div class="bg-app-surface rounded-xl shadow-md border border-app-border overflow-hidden min-h-[280px]">
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-app-border bg-app-card text-slate-300 font-bold uppercase tracking-wider text-[11px]">
+                <th class="py-3 px-4">Region / Node Name</th>
+                <th class="py-3 px-4">Country</th>
+                <th class="py-3 px-4">Server Host / IP</th>
+                <th class="py-3 px-4">Estimated Latency</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="nodes-table-body" class="divide-y divide-app-border">
+              {% if nodes %}
+                {% for node in nodes %}
+                <tr class="node-row hover:bg-app-card/60 transition group">
+                  
+                  <!-- 1. Flag & Node Name -->
+                  <td class="py-3.5 px-4 font-semibold text-white">
+                    <div class="flex items-center gap-3">
+                      <span class="text-2xl select-none">{{ node.flag }}</span>
+                      <div>
+                        <div class="font-bold text-slate-100 flex items-center gap-2">
+                          {{ node.name }}
+                          {% if node.is_master %}
+                            <span class="text-[9px] font-extrabold px-2 py-0.5 rounded bg-blue-600/20 text-blue-300 border border-blue-500/30 uppercase">Master Hub</span>
+                          {% endif %}
+                        </div>
+                        <div class="text-[10px] text-slate-400">{{ node.description }}</div>
+                      </div>
+                    </div>
+                  </td>
+
+                  <!-- 2. Country -->
+                  <td class="py-3.5 px-4 whitespace-nowrap">
+                    <span class="font-bold text-slate-300">{{ node.country }} ({{ node.country_code }})</span>
+                  </td>
+
+                  <!-- 3. Host / IP -->
+                  <td class="py-3.5 px-4 whitespace-nowrap">
+                    <span class="font-mono text-blue-300 font-bold bg-app-bg px-2.5 py-1 rounded border border-app-border text-[11px]">
+                      {{ node.endpoint }}
+                    </span>
+                  </td>
+
+                  <!-- 4. Latency / Ping -->
+                  <td class="py-3.5 px-4 whitespace-nowrap">
+                    <span class="inline-flex items-center gap-1 font-mono font-bold
+                      {% if node.ping_ms <= 50 %}text-emerald-400
+                      {% elif node.ping_ms <= 100 %}text-amber-400
+                      {% else %}text-slate-300{% endif %}">
+                      <span class="w-1.5 h-1.5 rounded-full {% if node.ping_ms <= 50 %}bg-emerald-400{% elif node.ping_ms <= 100 %}bg-amber-400{% else %}bg-slate-400{% endif %}"></span>
+                      ~{{ node.ping_ms }} ms
+                    </span>
+                  </td>
+
+                  <!-- 5. Status -->
+                  <td class="py-3.5 px-4 whitespace-nowrap">
+                    {% if node.status == 'online' %}
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/60">
+                        Online
+                      </span>
+                    {% else %}
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
+                        Maintenance
+                      </span>
+                    {% endif %}
+                  </td>
+
+                  <!-- 6. Delete action -->
+                  <td class="py-3.5 px-4 text-right whitespace-nowrap">
+                    {% if not node.is_master %}
+                      <button onclick="deleteNode('{{ node.id }}', '{{ node.name }}')" class="px-3 py-1.5 rounded bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/60 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        <span>Delete</span>
+                      </button>
+                    {% else %}
+                      <span class="text-xs text-slate-500 italic">Primary</span>
+                    {% endif %}
+                  </td>
+
+                </tr>
+                {% endfor %}
+              {% endif %}
+            </tbody>
           </table>
         </div>
       </div>
@@ -761,6 +902,60 @@
     </div>
   </div>
 
+  <!-- Modal: Add Server Node Modal -->
+  <div id="modal-add-node" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-app-border pb-3.5">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="globe" class="w-4 h-4 text-emerald-400"></i>
+          Add Server Node (Regional Edge)
+        </h3>
+        <button onclick="closeModal('modal-add-node')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-add-node" onsubmit="submitAddNode(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Region / Country</label>
+          <select id="input-node-country" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+            <option value="SG">🇸🇬 Singapore (SG)</option>
+            <option value="JP">🇯🇵 Japan (JP)</option>
+            <option value="US">🇺🇸 United States (US)</option>
+            <option value="DE">🇩🇪 Germany (DE)</option>
+            <option value="UK">🇬🇧 United Kingdom (UK)</option>
+            <option value="HK">🇭🇰 Hong Kong (HK)</option>
+            <option value="TH">🇹🇭 Thailand (TH)</option>
+            <option value="MM">🇲🇲 Myanmar (MM)</option>
+            <option value="KR">🇰🇷 South Korea (KR)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Node Display Name</label>
+          <input type="text" id="input-node-name" required placeholder="e.g. Singapore SG-02 (High Speed)" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Server Host / IP Address</label>
+          <input type="text" id="input-node-endpoint" required placeholder="e.g. sg2.burmesevpn.com or 128.199.x.x" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Description / Notes (Optional)</label>
+          <input type="text" id="input-node-desc" placeholder="e.g. Optimized for Gaming & Streaming" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-add-node')" class="px-4 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i> Add Server Node
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal 3: QR Code Modal -->
   <div id="modal-qr" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
     <div class="bg-app-surface rounded-xl max-w-sm w-full p-6 border border-app-border shadow-2xl text-center space-y-4">
@@ -850,27 +1045,41 @@
     function switchTab(tab) {
       const viewMobile = document.getElementById("view-mobile");
       const viewRouter = document.getElementById("view-router");
+      const viewNode = document.getElementById("view-node");
+
       const btnMobile = document.getElementById("tab-btn-mobile");
       const btnRouter = document.getElementById("tab-btn-router");
+      const btnNode = document.getElementById("tab-btn-node");
+
       const actMobile = document.getElementById("tab-action-mobile");
       const actRouter = document.getElementById("tab-action-router");
+      const actNode = document.getElementById("tab-action-node");
+
+      // Hide all
+      viewMobile.classList.add("hidden");
+      viewRouter.classList.add("hidden");
+      viewNode.classList.add("hidden");
+
+      actMobile.classList.add("hidden");
+      actRouter.classList.add("hidden");
+      actNode.classList.add("hidden");
+
+      btnMobile.className = "px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
+      btnRouter.className = "px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
+      btnNode.className = "px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
 
       if (tab === 'mobile') {
         viewMobile.classList.remove("hidden");
-        viewRouter.classList.add("hidden");
         actMobile.classList.remove("hidden");
-        actRouter.classList.add("hidden");
-
-        btnMobile.className = "px-5 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-sm";
-        btnRouter.className = "px-5 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card";
-      } else {
-        viewMobile.classList.add("hidden");
+        btnMobile.className = "px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-sm whitespace-nowrap";
+      } else if (tab === 'router') {
         viewRouter.classList.remove("hidden");
-        actMobile.classList.add("hidden");
         actRouter.classList.remove("hidden");
-
-        btnRouter.className = "px-5 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-amber-600 text-white shadow-sm";
-        btnMobile.className = "px-5 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card";
+        btnRouter.className = "px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-amber-600 text-white shadow-sm whitespace-nowrap";
+      } else if (tab === 'node') {
+        viewNode.classList.remove("hidden");
+        actNode.classList.remove("hidden");
+        btnNode.className = "px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-sm whitespace-nowrap";
       }
       lucide.createIcons();
     }
@@ -1064,6 +1273,47 @@
         const res = await fetch(`/api/routers/${id}`, { method: "DELETE" });
         if (res.ok) {
           showToast("Router deleted!");
+          setTimeout(() => location.reload(), 300);
+        }
+      } catch (err) {}
+    }
+
+    function openAddNodeModal() {
+      openModal("modal-add-node");
+    }
+
+    async function submitAddNode(e) {
+      e.preventDefault();
+      const country_code = document.getElementById("input-node-country").value;
+      const name = document.getElementById("input-node-name").value;
+      const endpoint = document.getElementById("input-node-endpoint").value;
+      const description = document.getElementById("input-node-desc").value;
+
+      try {
+        const res = await fetch("/api/nodes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ country_code, name, endpoint, wg_port: 51820, description })
+        });
+        if (res.ok) {
+          showToast("Server Node added successfully!");
+          closeModal("modal-add-node");
+          setTimeout(() => location.reload(), 300);
+        } else {
+          const err = await res.json();
+          alert(err.detail || "Failed to add node");
+        }
+      } catch (err) {
+        alert("Network error");
+      }
+    }
+
+    async function deleteNode(id, name) {
+      if (!confirm(`Are you sure you want to delete node "${name}"?`)) return;
+      try {
+        const res = await fetch(`/api/nodes/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast("Node deleted!");
           setTimeout(() => location.reload(), 300);
         }
       } catch (err) {}

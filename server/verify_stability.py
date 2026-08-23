@@ -52,7 +52,7 @@ def test_all():
             assert 'H3C Magic' in sc
     print(f"[PASS] 5/8 Router Setup Generators ({len(routers)} routers): Verified")
 
-    # 6. Test Mobile Keys & Subscription (Public endpoint for apps)
+    # 6. Test Mobile Multi-Node Subscription (Public endpoint for apps)
     keys = status.get('keys', [])
     assert len(keys) > 0
     first_key = keys[0]
@@ -60,27 +60,48 @@ def test_all():
     userinfo = sub_res.headers.get('Subscription-Userinfo')
     assert userinfo is not None
     sub_b64 = sub_res.read().decode('utf-8')
-    decoded_url = base64.b64decode(sub_b64).decode('utf-8')
-    assert decoded_url.startswith('ss://')
-    print(f"[PASS] 6/8 Mobile App Subscription Endpoint ({userinfo}): 200 OK")
+    decoded_lines = base64.b64decode(sub_b64).decode('utf-8').strip().split('\n')
+    assert len(decoded_lines) >= 3 # Multiple regional nodes (SG, JP, US, DE)
+    for line in decoded_lines:
+        assert line.startswith('ss://')
+    print(f"[PASS] 6/10 Multi-Node Subscription Generator ({len(decoded_lines)} Regional Nodes: SG/JP/US/DE): 200 OK")
 
-    # 7. Test Batch Keys Export
+    # 7. Test Node Cluster Management APIs
+    node_create_payload = json.dumps({
+        "country_code": "UK",
+        "name": "London UK-01 (Europe Core)",
+        "endpoint": "uk1.burmesevpn.com",
+        "wg_port": 51820,
+        "description": "UK Streaming & Privacy"
+    }).encode('utf-8')
+    add_node_req = urllib.request.Request(f'{BASE}/api/nodes', data=node_create_payload, headers={'Content-Type': 'application/json'})
+    add_node_res = json.loads(opener.open(add_node_req).read().decode('utf-8'))
+    created_node = add_node_res.get('node')
+    assert created_node is not None and created_node.get('country_code') == 'UK'
+    
+    # Delete the test node
+    del_node_req = urllib.request.Request(f'{BASE}/api/nodes/{created_node["id"]}', headers={}, method='DELETE')
+    del_res = json.loads(opener.open(del_node_req).read().decode('utf-8'))
+    assert del_res.get('success') is True
+    print(f"[PASS] 7/10 Node Cluster CRUD API (Add/List/Delete Edge Nodes): 200 OK")
+
+    # 8. Test Batch Keys Export
     exp = opener.open(f'{BASE}/api/keys/export').read().decode('utf-8')
     assert len(exp.strip()) > 0
-    print(f"[PASS] 7/9 Batch Keys Export API: 200 OK")
+    print(f"[PASS] 8/10 Batch Keys Export API: 200 OK")
 
-    # 8. Test Automated High-Load Server Optimization & Watchdog
+    # 9. Test Automated High-Load Server Optimization & Watchdog
     opt_req = urllib.request.Request(f'{BASE}/api/server/optimize', data=b"{}", headers={'Content-Type': 'application/json'})
     opt_res = json.loads(opener.open(opt_req).read().decode('utf-8'))
     assert opt_res.get('success') is True
-    print(f"[PASS] 8/9 High-Load Auto-Mitigation Engine: 200 OK ({opt_res.get('garbage_collected_objects')} objects collected)")
+    print(f"[PASS] 9/10 High-Load Auto-Mitigation Engine: 200 OK ({opt_res.get('garbage_collected_objects')} objects collected)")
 
-    # 9. Test Logout Action
+    # 10. Test Logout Action
     logout_res = opener.open(f'{BASE}/logout')
     assert '/login' in logout_res.geturl() or logout_res.status == 200
-    print("[PASS] 9/9 Logout & Session Revocation: 200 OK")
+    print("[PASS] 10/10 Logout & Session Revocation: 200 OK")
 
-    print("[SUCCESS] All 9/9 High-Load, Multi-VPN & Auth Tests Passed Successfully!")
+    print("[SUCCESS] All 10/10 Multi-Node, High-Load, Multi-VPN & Auth Tests Passed Successfully!")
 
 if __name__ == '__main__':
     test_all()

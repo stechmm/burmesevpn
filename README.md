@@ -52,6 +52,14 @@
 - 🛡️ **Anti-DDoS & SYN-Shield**: `tcp_syncookies = 1`၊ `tcp_tw_reuse = 1` ဖြင့် Bot / Attack spike များကို အလိုအလျောက် ခံနိုင်ရည်ရှိအောင် ကာကွယ်ခြင်း။
 - 🚦 **Adaptive Rate Limiter**: Brute-force နှင့် Subscription scraping များကို In-memory Sliding Window ဖြင့် အလိုအလျောက် throttle ထိန်းချုပ်ခြင်း။
 
+### 4. 🌍 Multi-Node Server Cluster (US / SG / JP / DE Regional Nodes)
+- 🇸🇬 **Singapore Core (SG)**: Myanmar အတွက် အမြန်ဆုံး အနိမ့်ဆုံး latency (~35ms)။
+- 🇯🇵 **Tokyo Express (JP)**: Gaming & Low-jitter Streaming (~68ms)။
+- 🇺🇸 **Silicon Valley (US)**: US Streaming & Enterprise IP Routing (~175ms)။
+- 🇩🇪 **Frankfurt Core (DE)**: European Privacy & Anti-Censorship (~195ms)။
+- 🔄 **Unified Dynamic Subscription**: User သည် Key ၁ ခုတည်းဖြင့် `/sub/{key_id}` မှတစ်ဆင့် App (v2rayNG/Shadowrocket/Outline) ထဲတွင် နိုင်ငံအားလုံး (SG/JP/US/DE) သို့ 1-Tap ဖြင့် စိတ်ကြိုက် ပြောင်းလဲ အသုံးပြုနိုင်ခြင်း။
+- ➕ **Edge Node Expansion**: Web Dashboard မှ `+ Add Server Node` ဖြင့် Node အသစ်များကို လိုသလို ထပ်မံ ချဲ့ထွင်နိုင်ခြင်း။
+
 ---
 
 ## 🚀 VPS ပေါ်တွင် ၁ ချက်နှိပ် တင်ဆင်နည်း (1-Click Linux VPS Deployment)

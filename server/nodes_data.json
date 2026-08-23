@@ -1,0 +1,60 @@
+{
+  "nodes": [
+    {
+      "id": "node-sg-01",
+      "name": "Singapore SG-01 (Direct Fiber)",
+      "country": "Singapore",
+      "country_code": "SG",
+      "flag": "🇸🇬",
+      "endpoint": "sg1.burmesevpn.com",
+      "wg_port": 51820,
+      "status": "online",
+      "ping_ms": 36,
+      "load_percent": 28,
+      "is_master": true,
+      "description": "Lowest Latency for Myanmar users (Yangon/Mandalay)"
+    },
+    {
+      "id": "node-jp-01",
+      "name": "Tokyo JP-01 (Express Gaming)",
+      "country": "Japan",
+      "country_code": "JP",
+      "flag": "🇯🇵",
+      "endpoint": "jp1.burmesevpn.com",
+      "wg_port": 51820,
+      "status": "online",
+      "ping_ms": 68,
+      "load_percent": 42,
+      "is_master": false,
+      "description": "Optimized for Low Latency Gaming & Japanese Media"
+    },
+    {
+      "id": "node-us-01",
+      "name": "Silicon Valley US-01 (High Bandwidth)",
+      "country": "United States",
+      "country_code": "US",
+      "flag": "🇺🇸",
+      "endpoint": "us1.burmesevpn.com",
+      "wg_port": 51820,
+      "status": "online",
+      "ping_ms": 175,
+      "load_percent": 35,
+      "is_master": false,
+      "description": "Unrestricted US Streaming & Enterprise IP"
+    },
+    {
+      "id": "node-de-01",
+      "name": "Frankfurt DE-01 (Europe Core)",
+      "country": "Germany",
+      "country_code": "DE",
+      "flag": "🇩🇪",
+      "endpoint": "de1.burmesevpn.com",
+      "wg_port": 51820,
+      "status": "online",
+      "ping_ms": 195,
+      "load_percent": 19,
+      "is_master": false,
+      "description": "Strict Privacy & European Routing"
+    }
+  ]
+}

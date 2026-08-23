@@ -8,10 +8,11 @@ from fastapi import FastAPI, Request, Form, HTTPException, Depends, status
 from fastapi.responses import HTMLResponse, PlainTextResponse, Response, JSONResponse, FileResponse, RedirectResponse
 from fastapi.middleware.gzip import GZipMiddleware
 from pydantic import BaseModel
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from wg_manager import WireGuardManager
 from key_manager import AccessKeyManager
+from node_manager import NodeManager
 from auth import AuthManager
 from watchdog import watchdog_engine
 
@@ -29,6 +30,7 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATES_DIR))
 
 wg_manager = WireGuardManager()
 key_manager = AccessKeyManager()
+node_manager = NodeManager()
 auth_manager = AuthManager()
 
 # ================= High-Load Rate Limiter =================
@@ -93,6 +95,19 @@ class MobileKeyUpdateRequest(BaseModel):
     max_devices: int = 1
     enabled: bool = True
 
+class NodeCreateRequest(BaseModel):
+    name: str
+    country_code: str = "SG"
+    endpoint: str
+    wg_port: int = 51820
+    description: Optional[str] = ""
+
+class NodeUpdateRequest(BaseModel):
+    name: str
+    endpoint: str
+    status: str = "online"
+    description: Optional[str] = ""
+
 class ServerSettingsRequest(BaseModel):
     endpoint: str
     dns: str = "1.1.1.1, 8.8.8.8"
@@ -151,6 +166,7 @@ async def index(request: Request):
     server_info = wg_manager.get_server_info()
     router_clients = wg_manager.get_clients()
     mobile_keys = key_manager.get_all_keys()
+    nodes_list = node_manager.get_all_nodes()
     watchdog_metrics = watchdog_engine.get_metrics()
     
     template = jinja_env.get_template("index.html")
@@ -161,9 +177,50 @@ async def index(request: Request):
         mobile_keys=mobile_keys,
         total_keys=len(mobile_keys),
         active_keys=sum(1 for k in mobile_keys if k.get("status") == "active"),
+        nodes=nodes_list,
+        total_nodes=len(nodes_list),
         watchdog=watchdog_metrics
     )
     return HTMLResponse(content=html_content)
+
+# ================= Node Cluster Management API Routes =================
+
+@app.get("/api/nodes")
+async def api_get_nodes(auth=Depends(require_admin_api)):
+    return node_manager.get_all_nodes()
+
+@app.post("/api/nodes")
+async def api_add_node(data: NodeCreateRequest, auth=Depends(require_admin_api)):
+    if not data.name or not data.endpoint:
+        raise HTTPException(status_code=400, detail="Name and endpoint are required")
+    new_node = node_manager.add_node(
+        name=data.name,
+        country_code=data.country_code,
+        endpoint=data.endpoint,
+        wg_port=data.wg_port,
+        description=data.description or ""
+    )
+    return {"success": True, "node": new_node}
+
+@app.post("/api/nodes/{node_id}/update")
+async def api_update_node(node_id: str, data: NodeUpdateRequest, auth=Depends(require_admin_api)):
+    updated = node_manager.update_node(
+        node_id=node_id,
+        name=data.name,
+        endpoint=data.endpoint,
+        status=data.status,
+        description=data.description or ""
+    )
+    if not updated:
+        raise HTTPException(status_code=404, detail="Node not found")
+    return {"success": True, "node": updated}
+
+@app.delete("/api/nodes/{node_id}")
+async def api_delete_node(node_id: str, auth=Depends(require_admin_api)):
+    success = node_manager.delete_node(node_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Node not found or cannot delete master node")
+    return {"success": True, "message": "Node removed"}
 
 # ================= Part 1: Router API Routes =================
 
@@ -306,7 +363,7 @@ async def api_simulate_traffic(key_id: str, data: TrafficSimulateRequest, auth=D
     key_manager.simulate_add_traffic(key_id, data.added_mb)
     return {"success": True, "message": f"Added {data.added_mb} MB traffic"}
 
-# Subscription link endpoint for mobile apps (v2rayNG, Shadowrocket, Sing-box, Clash, Outline)
+# Multi-Node Subscription link endpoint for mobile apps (v2rayNG, Shadowrocket, Sing-box, Clash, Outline)
 @app.get("/sub/{key_id}")
 async def api_get_subscription(key_id: str, request: Request):
     apply_rate_limit(request, max_reqs=60, window_secs=60)
@@ -315,12 +372,34 @@ async def api_get_subscription(key_id: str, request: Request):
     if not key:
         raise HTTPException(status_code=404, detail="Subscription not found")
     
-    access_url = key.get("access_url", "")
+    nodes = node_manager.get_all_nodes()
+    cipher = key.get("cipher", "chacha20-ietf-poly1305")
+    password = key.get("password", "")
+    port = key.get("port", 8388)
+    
+    node_urls = []
+    for node in nodes:
+        if node.get("status") == "online":
+            flag = node.get("flag", "🌐")
+            node_name = node.get("name", "Node")
+            endpoint = node.get("endpoint", "127.0.0.1")
+            
+            # Shadowsocks AEAD format: ss://BASE64(cipher:password@endpoint:port)#Tag
+            user_info_raw = f"{cipher}:{password}@{endpoint}:{port}"
+            encoded_user_info = base64.b64encode(user_info_raw.encode('utf-8')).decode('utf-8')
+            tag = f"{flag} Burmese VPN - {node_name}"
+            ss_url = f"ss://{encoded_user_info}#{tag}"
+            node_urls.append(ss_url)
+            
+    if not node_urls:
+        node_urls.append(key.get("access_url", ""))
+        
+    combined_content = "\n".join(node_urls)
+    b64_content = base64.b64encode(combined_content.encode('utf-8')).decode('utf-8')
+    
     used_bytes = int(key.get("used_bytes", 0))
     limit_bytes = int(key.get("data_limit_gb", 0) * 1024 * 1024 * 1024)
     expire_timestamp = int(key.get("expire_timestamp", 0))
-    
-    b64_content = base64.b64encode(access_url.encode('utf-8')).decode('utf-8')
     
     headers = {
         "Subscription-Userinfo": f"upload=0; download={used_bytes}; total={limit_bytes}; expire={expire_timestamp}",
@@ -345,12 +424,15 @@ async def api_get_live_status(auth=Depends(require_admin_api)):
     server_info = wg_manager.get_server_info()
     router_clients = wg_manager.get_clients()
     mobile_keys = key_manager.get_all_keys()
+    nodes_list = node_manager.get_all_nodes()
     watchdog_metrics = watchdog_engine.get_metrics()
     return {
         "server": server_info,
         "total_routers": len(router_clients),
         "total_keys": len(mobile_keys),
+        "total_nodes": len(nodes_list),
         "active_keys": sum(1 for k in mobile_keys if k.get("status") == "active"),
+        "nodes": nodes_list,
         "watchdog": watchdog_metrics,
         "keys": mobile_keys,
         "routers": router_clients
