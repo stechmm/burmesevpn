@@ -370,3 +370,58 @@ echo "=========================================="
 # /routing rule add src-address=192.168.88.100/32 table=to-vpn comment="Specific Local Device -> VPN"
 """
         return rsc
+
+    def generate_h3c_script(self, client_id: str) -> str:
+        """Generate setup script and configuration commands for H3C Magic Routers (NX30 Pro, B365, etc.)"""
+        data = self._load_data()
+        server = data.get("server", {})
+        client = next((c for c in data.get("clients", []) if c["id"] == client_id), None)
+        if not client:
+            return ""
+
+        endpoint = server.get("endpoint", "YOUR_SERVER_IP")
+        port = server.get("listen_port", 51820)
+        client_ip = client.get("allocated_ip")
+        ip_without_mask = client_ip.split("/")[0]
+
+        script = f"""#!/bin/sh
+# ==============================================================================
+# H3C Magic Series (NX30 Pro, B365, R300) WireGuard VPN Automated Setup
+# Client: {client.get('name')}
+# ==============================================================================
+
+echo "[1/4] Checking H3C Magic system packages..."
+opkg update 2>/dev/null || true
+opkg install kmod-wireguard wireguard-tools luci-proto-wireguard 2>/dev/null || true
+
+echo "[2/4] Initializing WireGuard Interface (wg0)..."
+uci delete network.wg0 2>/dev/null || true
+uci set network.wg0=interface
+uci set network.wg0.proto='wireguard'
+uci set network.wg0.private_key='{client.get('private_key')}'
+uci add_list network.wg0.addresses='{ip_without_mask}/24'
+
+echo "[3/4] Configuring Burmese VPN Gateway Peer..."
+uci delete network.wgserver 2>/dev/null || true
+uci set network.wgserver=wireguard_wg0
+uci set network.wgserver.public_key='{server.get('public_key')}'
+uci set network.wgserver.endpoint_host='{endpoint}'
+uci set network.wgserver.endpoint_port='{port}'
+uci set network.wgserver.persistent_keepalive='25'
+uci set network.wgserver.route_allowed_ips='1'
+uci add_list network.wgserver.allowed_ips='0.0.0.0/0'
+
+echo "[4/4] Setting up Firewall & Gateway Masquerade..."
+uci add_list firewall.@zone[1].network='wg0' 2>/dev/null || true
+uci commit network
+uci commit firewall
+
+/etc/init.d/network restart
+/etc/init.d/firewall restart 2>/dev/null || true
+
+echo "=========================================================="
+echo " ✅ H3C Magic Router successfully configured for VPN!"
+echo " Check tunnel status with: wg show"
+echo "=========================================================="
+"""
+        return script

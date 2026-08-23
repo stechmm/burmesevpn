@@ -38,6 +38,12 @@ class MobileKeyCreateRequest(BaseModel):
     expire_days: int = 30
     max_devices: int = 1
 
+class MobileKeyUpdateRequest(BaseModel):
+    name: str
+    data_limit_gb: float = 20.0
+    max_devices: int = 1
+    enabled: bool = True
+
 class ServerSettingsRequest(BaseModel):
     endpoint: str
     dns: str = "1.1.1.1, 8.8.8.8"
@@ -118,6 +124,20 @@ async def api_get_mikrotik(client_id: str):
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
 
+@app.get("/api/routers/{client_id}/h3c")
+async def api_get_h3c(client_id: str):
+    script = wg_manager.generate_h3c_script(client_id)
+    if not script:
+        raise HTTPException(status_code=404, detail="Router profile not found")
+    clients = wg_manager.get_clients()
+    client = next((c for c in clients if c["id"] == client_id), None)
+    filename = f"h3c_magic_{client['name'].replace(' ', '_') if client else 'setup'}.sh"
+    return Response(
+        content=script,
+        media_type="text/x-sh",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )
+
 @app.get("/api/routers/{client_id}/conf")
 async def api_get_router_conf(client_id: str):
     conf = wg_manager.generate_standard_conf(client_id)
@@ -153,6 +173,19 @@ async def api_create_key(data: MobileKeyCreateRequest):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.post("/api/keys/{key_id}/update")
+async def api_update_key(key_id: str, data: MobileKeyUpdateRequest):
+    updated = key_manager.update_key(
+        key_id=key_id,
+        name=data.name,
+        data_limit_gb=data.data_limit_gb,
+        max_devices=data.max_devices,
+        enabled=data.enabled
+    )
+    if not updated:
+        raise HTTPException(status_code=404, detail="Key not found")
+    return {"success": True, "key": updated}
+
 @app.delete("/api/keys/{key_id}")
 async def api_delete_key(key_id: str):
     key_manager.delete_key(key_id)
@@ -178,16 +211,54 @@ async def api_simulate_traffic(key_id: str, data: TrafficSimulateRequest):
     key_manager.simulate_add_traffic(key_id, data.added_mb)
     return {"success": True, "message": f"Added {data.added_mb} MB traffic"}
 
-# Subscription link endpoint for mobile apps
-@app.get("/sub/{key_id}", response_class=PlainTextResponse)
+# Subscription link endpoint for mobile apps (v2rayNG, Shadowrocket, Sing-box, Clash, Outline)
+@app.get("/sub/{key_id}")
 async def api_get_subscription(key_id: str):
+    import base64
     keys = key_manager.get_all_keys()
     key = next((k for k in keys if k["id"] == key_id), None)
     if not key:
         raise HTTPException(status_code=404, detail="Subscription not found")
-    if key.get("status") != "active":
-        return f"# Key {key.get('status')}: {key.get('status_text')}"
-    return key.get("access_url", "")
+    
+    access_url = key.get("access_url", "")
+    used_bytes = int(key.get("used_bytes", 0))
+    limit_bytes = int(key.get("data_limit_gb", 0) * 1024 * 1024 * 1024)
+    expire_timestamp = int(key.get("expire_timestamp", 0))
+    
+    # Base64 encoded format for v2rayNG / Sing-box / Shadowrocket
+    b64_content = base64.b64encode(access_url.encode('utf-8')).decode('utf-8')
+    
+    headers = {
+        "Subscription-Userinfo": f"upload=0; download={used_bytes}; total={limit_bytes}; expire={expire_timestamp}",
+        "Profile-Update-Interval": "12",
+        "Content-Disposition": f'inline; filename="{key.get("name", "vpn")}.txt"'
+    }
+    return Response(content=b64_content, media_type="text/plain; charset=utf-8", headers=headers)
+
+@app.get("/api/keys/export")
+async def api_export_keys():
+    keys = key_manager.get_all_keys()
+    active_urls = [k["access_url"] for k in keys if k.get("status") == "active" and k.get("access_url")]
+    content = "\n".join(active_urls)
+    return Response(
+        content=content,
+        media_type="text/plain",
+        headers={"Content-Disposition": 'attachment; filename="burmese_vpn_active_keys.txt"'}
+    )
+
+@app.get("/api/status")
+async def api_get_live_status():
+    server_info = wg_manager.get_server_info()
+    router_clients = wg_manager.get_clients()
+    mobile_keys = key_manager.get_all_keys()
+    return {
+        "server": server_info,
+        "total_routers": len(router_clients),
+        "total_keys": len(mobile_keys),
+        "active_keys": sum(1 for k in mobile_keys if k.get("status") == "active"),
+        "keys": mobile_keys,
+        "routers": router_clients
+    }
 
 # ================= General Server Settings =================
 

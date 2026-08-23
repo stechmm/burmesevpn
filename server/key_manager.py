@@ -225,3 +225,25 @@ class AccessKeyManager:
                 k["used_bytes"] = k.get("used_bytes", 0) + int(added_mb * 1024 * 1024)
                 self._save_data(data)
                 return
+
+    def update_key(
+        self,
+        key_id: str,
+        name: str,
+        data_limit_gb: float,
+        max_devices: int,
+        enabled: bool
+    ) -> Optional[dict]:
+        data = self._load_data()
+        for k in data.get("keys", []):
+            if k["id"] == key_id:
+                k["name"] = name.strip()
+                k["data_limit_gb"] = data_limit_gb
+                k["data_limit_bytes"] = int(data_limit_gb * 1024 * 1024 * 1024) if data_limit_gb > 0 else 0
+                k["max_devices"] = max_devices
+                k["enabled"] = enabled
+                if enabled and k.get("status") == "disabled":
+                    k["status"] = "active"
+                self._save_data(data)
+                return k
+        return None

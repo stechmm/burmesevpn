@@ -1,86 +1,94 @@
-# Burmese VPN 🇲🇲🛡️ - Dual-Engine Mobile & Router Hub
+# 🇲🇲 Burmese VPN - Dual-Engine Enterprise Hub
 
-Linux Server ပေါ်တွင် အလွန်ပေါ့ပါးမြန်ဆန်သည့် **WireGuard Protocol** နှင့် **Outline/Shadowsocks/V2Ray Protocol** ကို အခြေခံပြီး တည်ဆောက်ထားသော Dual-Engine VPN System ဖြစ်ပါသည်။
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/Framework-FastAPI-009688.svg)](https://fastapi.tiangolo.com)
+[![Protocols](https://img.shields.io/badge/Protocols-WireGuard%20%7C%20Shadowsocks-orange.svg)]()
 
-မိုဘိုင်းဖုန်း၊ ကွန်ပျူတာများအပြင် **OpenWrt, MikroTik RouterOS v7, AsusWRT, GL.iNet** စသည့် Router များတွင် အိမ်သုံး/ရုံးသုံး Network Gateway အဖြစ် မိနစ်ပိုင်းအတွင်း တပ်ဆင်အသုံးပြုနိုင်ပါသည်။
-
----
-
-## 🌟 အဓိက ပါဝင်သော စွမ်းဆောင်ရည်များ
-
-* ⚡ **Ultra-Fast & Kernel-Level Performance**: ChaCha20-Poly1305 encryption ဖြင့် CPU/RAM အသုံးပြုမှု အလွန်နည်းပါးခြင်း။
-* 🌐 **Multi-Router Ready**:
-  * **OpenWrt**: 1-Click Copy-Paste SSH Setup Script ပါဝင်ခြင်း။
-  * **MikroTik RouterOS v7**: Terminal Command Script (`.rsc`) အပြည့်အစုံ ထုတ်ပေးနိုင်ခြင်း။
-  * **AsusWRT / GL.iNet**: `.conf` file upload ဖြင့် တိုက်ရိုက် သုံးနိုင်ခြင်း။
-* 📱 **Mobile & Desktop QR Setup**: ဖုန်းများအတွက် WireGuard App ဖြင့် ချက်ချင်း Scan ဖတ်နိုင်မည့် Live QR Code Generator ပါဝင်ခြင်း။
-* 💻 **Modern Web Admin Dashboard**: Tailwind CSS ဖြင့် ပြုလုပ်ထားသော Dark UI ဖြစ်ပြီး Peer များ ထည့်ခြင်း၊ ဖျက်ခြင်း၊ IP ခွဲဝေခြင်းနှင့် Traffic စောင့်ကြည့်ခြင်းများကို အလွယ်တကူ ပြုလုပ်နိုင်ခြင်း။
-* 🛠️ **Dual Deployment Options**: Linux Server ပေါ်တွင် **1-Click Native Installer** ဖြင့်ဖြစ်စေ **Docker Compose** ဖြင့်ဖြစ်စေ နှစ်သက်ရာ run နိုင်ခြင်း။
+**Burmese VPN** သည် မြန်မာနိုင်ငံရှိ အင်တာနက် အသုံးပြုသူများနှင့် လုပ်ငန်းများအတွက် ရည်ရွယ်၍ အထူးဒီဇိုင်းဆင်ထားသော **Dual-Engine VPN & Gateway Management System** ဖြစ်ပါသည်။
 
 ---
 
-## 🚀 နည်းလမ်း (၁) - Linux Server ပေါ်တွင် 1-Click Script ဖြင့် Run ခြင်း (အကြံပြုချက်)
+## 🌟 အဓိက အပိုင်း (၂) ပိုင်း (Dual-Engine Architecture)
 
-Ubuntu (20.04/22.04/24.04), Debian (11/12), CentOS/AlmaLinux ရှိသော Linux Server ပေါ်သို့ root အနေဖြင့် ဝင်ရောက်ပြီး အောက်ပါ command ဖြင့် run ပါ:
+```
+                       ┌─────────────────────────────────────────┐
+                       │     🇲🇲 Burmese VPN Core Hub Server      │
+                       │          (FastAPI Web Dashboard)        │
+                       └───────────────────┬─────────────────────┘
+                                           │
+             ┌─────────────────────────────┴─────────────────────────────┐
+             ▼                                                           ▼
+┌───────────────────────────┐                               ┌───────────────────────────┐
+│ Part 1: Router Hub Engine │                               │ Part 2: Mobile Key Hub    │
+│  (WireGuard Tunnel Subnet)│                               │ (Shadowsocks/Outline ss:) │
+├───────────────────────────┤                               ├───────────────────────────┤
+│ • OpenWrt Routers         │                               │ • Outline App             │
+│ • MikroTik (RouterOS v7)  │                               │ • v2rayNG / Shadowrocket  │
+│ • H3C Magic Routers       │                               │ • Data Quota & Expiry     │
+│ • AsusWRT / GL.iNet       │                               │ • Device Limitations      │
+└───────────────────────────┘                               └───────────────────────────┘
+```
+
+### 1. 🌐 Router Gateway Hub (OpenWrt / MikroTik / H3C Magic)
+- **Engine**: Kernel-level WireGuard Subnet (`10.8.0.x/24`).
+- **Target**: အိမ်သုံး/ရုံးသုံး Router များ (OpenWrt, MikroTik RouterOS v7, H3C Magic NX30 Pro / B365, GL.iNet)။
+- **Feature**: Router တစ်လုံးတွင် ချိတ်ဆက်ထားရုံဖြင့် Router အောက်ရှိ ဖုန်း၊ Laptop၊ TV အားလုံး အလိုအလျောက် VPN ဖြတ်သန်းသွားမည် ဖြစ်ပါသည်။
+- **Setup**: Web Dashboard မှ **1-Click Copy Script** ကို Router Terminal ထဲ paste လုပ်ရုံဖြင့် အသင့်အသုံးပြုနိုင်ပါသည်။
+
+### 2. 📱 Mobile Client Key Hub (Android / iOS / Desktop)
+- **Engine**: Shadowsocks AEAD (`chacha20-ietf-poly1305`) & Dynamic Subscription.
+- **Target**: Android (Outline, v2rayNG), iOS (Shadowrocket, Outline, Sing-box), PC/Mac (Outline, Clash)။
+- **Feature**:
+  - 📊 **Byte-Level Data Quota**: 10GB, 20GB, 50GB, 100GB သို့မဟုတ် Unlimited သတ်မှတ်နိုင်ခြင်း။
+  - ⏳ **Expiration Enforcement**: 7 ရက်၊ 30 ရက်၊ 90 ရက်၊ 1 နှစ် သက်တမ်း ကန့်သတ်ချက်များ။
+  - 📱 **Device Limit**: ချိတ်ဆက်နိုင်သည့် စက်အလုံးရေ ကန့်သတ်ခြင်း။
+  - ⚙️ **Key Settings Form**: Data Reset, +30 Days Extend, Toggle Active/Pause စသည်တို့ကို Web Form မှ တိုက်ရိုက် စီမံနိုင်ခြင်း။
+  - 📥 **Batch Export & Subscription**: Keys အားလုံးကို 1-Click .txt export လုပ်နိုင်ပြီး `/sub/{key_id}` မှတစ်ဆင့် App အတွင်း Data လက်ကျန်နှင့် သက်တမ်း တိုက်ရိုက် ကြည့်ရှုနိုင်ခြင်း။
+
+---
+
+## 🚀 VPS ပေါ်တွင် ၁ ချက်နှိပ် တင်ဆင်နည်း (1-Click Linux VPS Deployment)
+
+Ubuntu / Debian VPS တစ်လုံး (Singapore, Tokyo, US စသည်) တွင် root ဖြင့် အောက်ပါ command ကို run လိုက်ပါ:
 
 ```bash
+git clone https://github.com/stechmm/burmesevpn.git
+cd burmesevpn
 sudo bash install.sh
 ```
 
-Setup ပြီးဆုံးပါက Terminal တွင် အောက်ပါအတိုင်း ပေါ်လာပါမည်:
-* **Web Admin Dashboard:** `http://<YOUR_SERVER_PUBLIC_IP>:8080`
-* **WireGuard UDP Port:** `51820`
+တပ်ဆင်မှု ပြီးဆုံးပါက Web Dashboard URL ပေါ်လာပါမည်:
+👉 `http://<YOUR_VPS_IP>:8080`
 
 ---
 
-## 🐳 နည်းလမ်း (၂) - Docker Compose ဖြင့် Run ခြင်း
-
-Docker သုံးလိုပါက အောက်ပါ command ကို run နိုင်ပါသည်:
+## 🛠 Manual Local Run (Development / Testing)
 
 ```bash
-# Server Public IP ကို သတ်မှတ်ပါ
-export WG_SERVER_ENDPOINT="YOUR_SERVER_PUBLIC_IP"
+# 1. Clone repository
+git clone https://github.com/stechmm/burmesevpn.git
+cd burmesevpn
 
-# Container ကို စတင် run ပါ
-docker-compose up -d
+# 2. Virtual Environment ပြုလုပ်ပြီး dependencies သွင်းပါ
+python -m venv .venv
+source .venv/bin/activate  # (Windows: .\.venv\Scripts\activate)
+pip install -r server/requirements.txt
+
+# 3. Server စတင် run ပါ
+cd server
+python -m uvicorn app:app --host 0.0.0.0 --port 8080 --reload
 ```
 
 ---
 
-## 📖 Router များနှင့် ချိတ်ဆက်အသုံးပြုနည်း လမ်းညွှန်များ
+## 📖 Router Setup Instructions (လမ်းညွှန်များ)
 
-* [OpenWrt Router တပ်ဆင်နည်း လမ်းညွှန်](router-configs/openwrt/README.md)
-* [MikroTik RouterOS v7 တပ်ဆင်နည်း လမ်းညွှန်](router-configs/mikrotik/README.md)
-* [AsusWRT, GL.iNet, Phones & PC တပ်ဆင်နည်း လမ်းညွှန်](router-configs/asuswrt-glinet/README.md)
-
----
-
-## ⚙️ Ports & Firewall Requirements (VPS / Cloud Provider)
-
-Cloud Provider (AWS, DigitalOcean, Hetzner, Linode, Google Cloud, Oracle Cloud) များတွင် အောက်ပါ Ports များကို Firewall / Security Group တွင် ဖွင့်ပေးရန် လိုအပ်ပါသည်:
-
-| Protocol | Port | Description |
-| :--- | :--- | :--- |
-| **UDP** | `51820` | WireGuard VPN Tunnel Traffic |
-| **TCP** | `8080` | Web Admin Management Dashboard |
+- [OpenWrt Setup Guide](file:///C:/Users/ST/.gemini/antigravity/scratch/lightweight-vpn-router-hub/router-configs/openwrt/README.md)
+- [MikroTik RouterOS v7 Setup Guide](file:///C:/Users/ST/.gemini/antigravity/scratch/lightweight-vpn-router-hub/router-configs/mikrotik/README.md)
+- [H3C Magic Series Setup Guide](file:///C:/Users/ST/.gemini/antigravity/scratch/lightweight-vpn-router-hub/router-configs/h3c-magic/README.md)
 
 ---
 
-## 📁 Project Structure
-
-```
-lightweight-vpn-router-hub/
-├── install.sh                     # Linux 1-Click Automated Installer
-├── docker-compose.yml             # Docker containerized setup
-├── Dockerfile                     # Container definition
-├── server/
-│   ├── app.py                     # FastAPI Web Application
-│   ├── wg_manager.py              # Core WireGuard key & config engine
-│   ├── requirements.txt           # Python dependencies
-│   └── templates/
-│       └── index.html             # Modern Glassmorphic Dashboard UI
-└── router-configs/
-    ├── openwrt/                   # OpenWrt scripts and docs
-    ├── mikrotik/                  # MikroTik RouterOS scripts and docs
-    └── asuswrt-glinet/            # Asus & GL.iNet docs
-```
+## 📄 License
+MIT License - Developed with ❤️ for Myanmar Community.
