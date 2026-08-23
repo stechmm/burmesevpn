@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="my" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dual-Engine VPN & Router Hub</title>
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Padauk:wght@400;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', 'Padauk', sans-serif;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- Top Header Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+          <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            Dual-Engine VPN Hub
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Outline + WireGuard</span>
+          </h1>
+          <p class="text-xs text-slate-400">Mobile Access Keys & Router Gateway Management</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3">
+        <button onclick="openServerSettingsModal()" class="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1.5 transition">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Server Settings</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- TAB SELECTOR (Part 1 vs Part 2) -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
+      <div class="flex space-x-2 bg-slate-900/90 p-1 rounded-xl border border-slate-800 w-full sm:w-auto">
+        
+        <!-- Tab Button 1: Mobile Keys -->
+        <button onclick="switchTab('mobile')" id="tab-btn-mobile" class="flex-1 sm:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-500/25">
+          <i data-lucide="smartphone" class="w-4 h-4"></i>
+          <span>📱 Mobile Access Keys (Outline / V2Ray)</span>
+          <span class="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-white/20">{{ total_keys }}</span>
+        </button>
+
+        <!-- Tab Button 2: Routers -->
+        <button onclick="switchTab('router')" id="tab-btn-router" class="flex-1 sm:flex-initial px-5 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-2">
+          <i data-lucide="router" class="w-4 h-4"></i>
+          <span>🌐 Router Gateways (OpenWrt / MikroTik)</span>
+          <span class="ml-1 px-1.5 py-0.5 rounded-full text-[10px] bg-slate-800">{{ total_routers }}</span>
+        </button>
+
+      </div>
+
+      <!-- Action Button based on Active Tab -->
+      <div id="tab-action-mobile">
+        <button onclick="openAddKeyModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-xs font-semibold shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-1.5 transition active:scale-95">
+          <i data-lucide="key-round" class="w-4 h-4"></i>
+          <span>➕ Create Mobile Access Key</span>
+        </button>
+      </div>
+
+      <div id="tab-action-router" class="hidden">
+        <button onclick="openAddRouterModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-xs font-semibold shadow-lg shadow-amber-500/25 flex items-center justify-center gap-1.5 transition active:scale-95">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span>➕ Add Router Gateway</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== PART 1: MOBILE ACCESS KEYS VIEW ==================== -->
+    <div id="view-mobile" class="space-y-6">
+
+      <!-- KPI Summary Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="glass-card rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>Total Keys</span>
+            <i data-lucide="key" class="w-4 h-4 text-indigo-400"></i>
+          </div>
+          <div class="mt-2 text-2xl font-bold text-white">{{ total_keys }}</div>
+          <p class="mt-1 text-xs text-slate-400">Mobile profiles created</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>Active Keys</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          </div>
+          <div class="mt-2 text-2xl font-bold text-emerald-400">{{ active_keys }}</div>
+          <p class="mt-1 text-xs text-slate-400">Valid date & quota</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>Supported Apps</span>
+            <i data-lucide="layers" class="w-4 h-4 text-purple-400"></i>
+          </div>
+          <div class="mt-2 text-sm font-bold text-slate-200 truncate">Outline, v2rayNG, Shadowrocket</div>
+          <p class="mt-1 text-xs text-slate-400">Paste key & connect instantly</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>Server Host</span>
+            <i data-lucide="server" class="w-4 h-4 text-blue-400"></i>
+          </div>
+          <div class="mt-2 text-sm font-bold text-white font-mono truncate">{{ server.endpoint }}</div>
+          <p class="mt-1 text-xs text-slate-400">Cipher: ChaCha20-Poly1305</p>
+        </div>
+
+      </div>
+
+      <!-- Keys Grid Section -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span>Mobile User Access Keys</span>
+              <span class="text-xs font-normal text-slate-400">(Device Limits • Data Quota • Expiry Enforcement)</span>
+            </h2>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="keys-container">
+          {% if mobile_keys %}
+            {% for key in mobile_keys %}
+            <div class="glass-card rounded-2xl p-5 shadow-lg border border-slate-800/90 hover:border-slate-700 transition flex flex-col justify-between space-y-4">
+              
+              <!-- Key Header -->
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                    <i data-lucide="key" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-white text-base flex items-center gap-2">
+                      {{ key.name }}
+                      <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold border
+                        {% if key.status == 'active' %}bg-emerald-500/20 text-emerald-300 border-emerald-500/30
+                        {% elif key.status == 'expired' %}bg-rose-500/20 text-rose-300 border-rose-500/30
+                        {% elif key.status == 'quota_exceeded' %}bg-amber-500/20 text-amber-300 border-amber-500/30
+                        {% else %}bg-slate-700 text-slate-400 border-slate-600{% endif %}">
+                        {{ key.status_text }}
+                      </span>
+                    </h3>
+                    <div class="text-xs text-slate-400 mt-0.5 flex items-center gap-3 font-mono">
+                      <span>Port: {{ key.port }}</span>
+                      <span>•</span>
+                      <span>Max Devices: {{ key.max_devices }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button onclick="toggleKeyStatus('{{ key.id }}')" class="p-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-xs transition" title="Toggle Enable/Disable">
+                  {% if key.enabled %}
+                    <span class="text-emerald-400 flex items-center gap-1"><i data-lucide="toggle-right" class="w-5 h-5"></i></span>
+                  {% else %}
+                    <span class="text-slate-500 flex items-center gap-1"><i data-lucide="toggle-left" class="w-5 h-5"></i></span>
+                  {% endif %}
+                </button>
+              </div>
+
+              <!-- Data Usage Progress Bar -->
+              <div class="space-y-1.5 bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400 flex items-center gap-1.5 font-medium">
+                    <i data-lucide="database" class="w-3.5 h-3.5 text-indigo-400"></i>
+                    Data Usage (ဒေတာသုံးစွဲမှု):
+                  </span>
+                  <span class="font-bold font-mono text-slate-200">
+                    {{ key.used_readable }} / {{ key.limit_readable }}
+                  </span>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                  <div class="h-2 rounded-full transition-all duration-500
+                    {% if key.usage_percent >= 90 %}bg-rose-500
+                    {% elif key.usage_percent >= 70 %}bg-amber-500
+                    {% else %}bg-indigo-500{% endif %}" 
+                    style="width: {{ key.usage_percent }}%"></div>
+                </div>
+
+                <div class="flex justify-between items-center text-[11px] text-slate-400 pt-1">
+                  <span>Usage: <strong class="text-slate-300">{{ key.usage_percent }}%</strong></span>
+                  <span class="flex items-center gap-1">
+                    <i data-lucide="calendar" class="w-3 h-3 text-purple-400"></i>
+                    {{ key.time_left_readable }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Access Key Copy Strip -->
+              <div class="flex items-center gap-2 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <div class="flex-1 font-mono text-xs text-indigo-300 truncate select-all">
+                  {{ key.access_url }}
+                </div>
+                <button onclick="copyToClipboard('{{ key.access_url }}', 'Access Key copied! Paste in Outline / v2rayNG app.')" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center gap-1 transition whitespace-nowrap active:scale-95">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy Key
+                </button>
+              </div>
+
+              <!-- Action Toolbar -->
+              <div class="pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <!-- QR Code -->
+                  <button onclick="viewAccessKeyQR('{{ key.id }}', '{{ key.name }}', '{{ key.access_url }}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1 transition" title="Show QR Code">
+                    <i data-lucide="qr-code" class="w-3.5 h-3.5 text-indigo-400"></i>
+                    <span>QR Code</span>
+                  </button>
+
+                  <!-- Simulate +1 GB Traffic -->
+                  <button onclick="simulateTraffic('{{ key.id }}', 1024)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition" title="Add 1 GB for demo test">
+                    <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+                    <span>+1 GB Test</span>
+                  </button>
+
+                  <!-- Reset Usage -->
+                  <button onclick="resetKeyUsage('{{ key.id }}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition" title="Reset data usage to 0">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-blue-400"></i>
+                    <span>Reset Data</span>
+                  </button>
+
+                  <!-- Extend 30 Days -->
+                  <button onclick="extendKeyExpiry('{{ key.id }}')" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition" title="Extend 30 Days">
+                    <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-purple-400"></i>
+                    <span>+30 Days</span>
+                  </button>
+                </div>
+
+                <!-- Delete Button -->
+                <button onclick="deleteKey('{{ key.id }}', '{{ key.name }}')" class="p-1.5 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 transition" title="Delete Key">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="col-span-2 glass-card rounded-2xl p-12 text-center space-y-4">
+              <div class="w-16 h-16 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto text-indigo-400">
+                <i data-lucide="key-round" class="w-8 h-8"></i>
+              </div>
+              <div class="space-y-1">
+                <h3 class="text-base font-bold text-white">No Mobile Access Keys Yet</h3>
+                <p class="text-xs text-slate-400 max-w-md mx-auto">ဖုန်း (Android / iOS) များတွင် Outline, v2rayNG, Shadowrocket ဖြင့် သုံးရန် Data Limit နှင့် Expiry ပါသော Access Key အသစ်တစ်ခု ဖန်တီးပါ။</p>
+              </div>
+              <button onclick="openAddKeyModal()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold inline-flex items-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i> Create First Access Key
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================== PART 2: ROUTER GATEWAYS VIEW ==================== -->
+    <div id="view-router" class="space-y-6 hidden">
+      
+      <!-- Router Overview Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        
+        <div class="glass-card rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>Connected Routers</span>
+            <i data-lucide="router" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <div class="mt-2 text-2xl font-bold text-white">{{ total_routers }}</div>
+          <p class="mt-1 text-xs text-slate-400">Home & Office Gateways</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>WireGuard Subnet</span>
+            <i data-lucide="network" class="w-4 h-4 text-indigo-400"></i>
+          </div>
+          <div class="mt-2 text-base font-bold text-white font-mono">{{ server.address }}</div>
+          <p class="mt-1 text-xs text-slate-400">Port: {{ server.listen_port }} (UDP)</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-4 shadow-xl">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase tracking-wider">
+            <span>Whole-Home Routing</span>
+            <i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="mt-2 text-base font-bold text-emerald-400">Auto NAT Masquerade</div>
+          <p class="mt-1 text-xs text-slate-400">Passes all LAN Wi-Fi devices</p>
+        </div>
+
+      </div>
+
+      <!-- Routers List -->
+      <div class="space-y-4">
+        <h2 class="text-base font-bold text-white flex items-center gap-2">
+          <span>Configured Router Gateways</span>
+          <span class="text-xs font-normal text-slate-400">(OpenWrt • MikroTik RouterOS v7)</span>
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {% if router_clients %}
+            {% for router in router_clients %}
+            <div class="glass-card rounded-2xl p-5 shadow-lg border border-slate-800/90 hover:border-slate-700 transition flex flex-col justify-between space-y-4">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                    <i data-lucide="router" class="w-5 h-5"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-white text-base flex items-center gap-2">
+                      {{ router.name }}
+                      <span class="text-[10px] px-2 py-0.5 rounded uppercase font-semibold 
+                        {% if router.type == 'openwrt' %}bg-amber-500/20 text-amber-300 border border-amber-500/30
+                        {% elif router.type == 'mikrotik' %}bg-sky-500/20 text-sky-300 border border-sky-500/30
+                        {% else %}bg-slate-700 text-slate-300{% endif %}">
+                        {{ router.type }}
+                      </span>
+                    </h3>
+                    <div class="text-xs text-slate-400 font-mono mt-0.5">
+                      VPN IP: <span class="text-slate-200 font-semibold">{{ router.allocated_ip }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button onclick="deleteRouter('{{ router.id }}', '{{ router.name }}')" class="p-1.5 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 transition" title="Delete Router">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+              <!-- Action Scripts -->
+              <div class="pt-2 border-t border-slate-800 flex flex-wrap items-center gap-2">
+                <button onclick="viewRouterSetup('openwrt', '{{ router.id }}', '{{ router.name }}')" class="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                  <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                  <span>OpenWrt Setup Script</span>
+                </button>
+
+                <button onclick="viewRouterSetup('mikrotik', '{{ router.id }}', '{{ router.name }}')" class="px-3 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                  <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                  <span>MikroTik v7 Terminal Script</span>
+                </button>
+
+                <a href="/api/routers/{{ router.id }}/conf" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition">
+                  <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  <span>.conf</span>
+                </a>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div class="col-span-2 glass-card rounded-2xl p-8 text-center space-y-3">
+              <p class="text-xs text-slate-400">No Router Gateways configured yet.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Modal 1: Add Mobile Access Key -->
+  <div id="modal-add-key" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-6 border border-slate-700 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="key-round" class="w-5 h-5 text-indigo-400"></i>
+          Create Mobile Access Key
+        </h3>
+        <button onclick="closeModal('modal-add-key')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-add-key" onsubmit="submitAddKey(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">User / Device Name (အမည်)</label>
+          <input type="text" id="input-key-name" required placeholder="e.g. Ko Min - Android, Ma Thuzar - iPhone" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Data Limit (ဒေတာကန့်သတ်ချက်)</label>
+            <select id="input-key-data" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none">
+              <option value="10">10 GB</option>
+              <option value="20" selected>20 GB</option>
+              <option value="50">50 GB</option>
+              <option value="100">100 GB</option>
+              <option value="0">Unlimited (အကန့်အသတ်မရှိ)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Expiration (သက်တမ်း)</label>
+            <select id="input-key-expiry" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none">
+              <option value="7">7 Days (၁ ပတ်)</option>
+              <option value="30" selected>30 Days (၁ လ)</option>
+              <option value="90">90 Days (၃ လ)</option>
+              <option value="365">1 Year (၁ နှစ်)</option>
+              <option value="0">Unlimited (ရက်အကန့်အသတ်မရှိ)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Max Concurrent Devices (သုံးနိုင်မည့် Device အရေအတွက်)</label>
+          <select id="input-key-devices" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none">
+            <option value="1" selected>1 Device (၁ လုံးသီးသန့်)</option>
+            <option value="2">2 Devices</option>
+            <option value="3">3 Devices</option>
+            <option value="5">5 Devices</option>
+          </select>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-add-key')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i> Generate Key
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Add Router Modal -->
+  <div id="modal-add-router" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-6 border border-slate-700 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="router" class="w-5 h-5 text-amber-400"></i>
+          Add Router Gateway
+        </h3>
+        <button onclick="closeModal('modal-add-router')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-add-router" onsubmit="submitAddRouter(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Router Name (အမည်)</label>
+          <input type="text" id="input-router-name" required placeholder="e.g. Home-OpenWrt, Office-MikroTik" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Router System</label>
+          <select id="input-router-type" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none">
+            <option value="openwrt">🌐 OpenWrt Router</option>
+            <option value="mikrotik">📶 MikroTik Router (RouterOS v7)</option>
+            <option value="generic_router">📡 AsusWRT / GL.iNet</option>
+          </select>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-add-router')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold flex items-center gap-1.5">
+            <i data-lucide="check" class="w-4 h-4"></i> Add Router
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: QR Code Modal -->
+  <div id="modal-qr" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-sm w-full p-6 border border-slate-700 shadow-2xl text-center space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-white" id="qr-modal-title">Scan Access Key</h3>
+        <button onclick="closeModal('modal-qr')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="bg-white p-4 rounded-xl inline-block mx-auto shadow-inner" id="qrcode-box"></div>
+      <p class="text-xs text-slate-400">Outline, v2rayNG သို့မဟုတ် Shadowrocket App မှ Scan ဖတ်၍ ချက်ချင်းချိတ်ဆက်နိုင်ပါသည်။</p>
+    </div>
+  </div>
+
+  <!-- Modal 4: Router Script Viewer -->
+  <div id="modal-router-script" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-2xl w-full p-6 border border-slate-700 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <i id="router-script-icon" data-lucide="terminal" class="w-5 h-5 text-amber-400"></i>
+          <h3 class="text-base font-bold text-white" id="router-script-title">Router Setup Script</h3>
+        </div>
+        <button onclick="closeModal('modal-router-script')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <pre id="router-script-content" class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-emerald-400 max-h-72 overflow-y-auto custom-scroll whitespace-pre-wrap select-all"></pre>
+
+      <div class="flex items-center justify-end gap-2">
+        <button onclick="copyRouterScript()" class="px-4 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold flex items-center gap-1.5">
+          <i data-lucide="copy" class="w-4 h-4"></i> Copy Script
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Server Settings Modal -->
+  <div id="modal-server-settings" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-md w-full p-6 border border-slate-700 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="settings" class="w-5 h-5 text-indigo-400"></i>
+          Server Public Settings
+        </h3>
+        <button onclick="closeModal('modal-server-settings')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-server-settings" onsubmit="submitServerSettings(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Public Server IP / Domain</label>
+          <input type="text" id="input-server-endpoint" required value="{{ server.endpoint }}" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">DNS Servers</label>
+          <input type="text" id="input-server-dns" value="{{ server.dns }}" class="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-white text-sm focus:border-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-server-settings')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-indigo-600 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2">
+    <i data-lucide="check-circle" class="w-4 h-4"></i>
+    <span id="toast-msg">Success</span>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let currentRouterScript = "";
+
+    function switchTab(tab) {
+      const viewMobile = document.getElementById("view-mobile");
+      const viewRouter = document.getElementById("view-router");
+      const btnMobile = document.getElementById("tab-btn-mobile");
+      const btnRouter = document.getElementById("tab-btn-router");
+      const actMobile = document.getElementById("tab-action-mobile");
+      const actRouter = document.getElementById("tab-action-router");
+
+      if (tab === 'mobile') {
+        viewMobile.classList.remove("hidden");
+        viewRouter.classList.add("hidden");
+        actMobile.classList.remove("hidden");
+        actRouter.classList.add("hidden");
+
+        btnMobile.className = "flex-1 sm:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-500/25";
+        btnRouter.className = "flex-1 sm:flex-initial px-5 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-2";
+      } else {
+        viewMobile.classList.add("hidden");
+        viewRouter.classList.remove("hidden");
+        actMobile.classList.add("hidden");
+        actRouter.classList.remove("hidden");
+
+        btnRouter.className = "flex-1 sm:flex-initial px-5 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2 bg-amber-600 text-white shadow-lg shadow-amber-500/25";
+        btnMobile.className = "flex-1 sm:flex-initial px-5 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center justify-center gap-2";
+      }
+      lucide.createIcons();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toast-msg").innerText = msg;
+      toast.classList.remove("translate-y-20", "opacity-0");
+      setTimeout(() => {
+        toast.classList.add("translate-y-20", "opacity-0");
+      }, 2500);
+    }
+
+    function copyToClipboard(text, msg = "Copied to clipboard!") {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(msg);
+      });
+    }
+
+    function closeModal(modalId) {
+      const el = document.getElementById(modalId);
+      el.classList.add("hidden");
+      el.classList.remove("flex");
+    }
+
+    function openModal(modalId) {
+      const el = document.getElementById(modalId);
+      el.classList.remove("hidden");
+      el.classList.add("flex");
+    }
+
+    function openAddKeyModal() { openModal("modal-add-key"); }
+    function openAddRouterModal() { openModal("modal-add-router"); }
+    function openServerSettingsModal() { openModal("modal-server-settings"); }
+
+    async function submitAddKey(e) {
+      e.preventDefault();
+      const name = document.getElementById("input-key-name").value;
+      const data_limit_gb = parseFloat(document.getElementById("input-key-data").value);
+      const expire_days = parseInt(document.getElementById("input-key-expiry").value);
+      const max_devices = parseInt(document.getElementById("input-key-devices").value);
+
+      try {
+        const res = await fetch("/api/keys", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, data_limit_gb, expire_days, max_devices })
+        });
+        if (res.ok) {
+          showToast("Access Key generated successfully!");
+          closeModal("modal-add-key");
+          setTimeout(() => location.reload(), 500);
+        }
+      } catch (err) {
+        alert("Failed to create key");
+      }
+    }
+
+    async function submitAddRouter(e) {
+      e.preventDefault();
+      const name = document.getElementById("input-router-name").value;
+      const type = document.getElementById("input-router-type").value;
+
+      try {
+        const res = await fetch("/api/routers", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, type })
+        });
+        if (res.ok) {
+          showToast("Router profile added!");
+          closeModal("modal-add-router");
+          setTimeout(() => location.reload(), 500);
+        }
+      } catch (err) {
+        alert("Failed to add router");
+      }
+    }
+
+    async function toggleKeyStatus(id) {
+      try {
+        const res = await fetch(`/api/keys/${id}/toggle`, { method: "POST" });
+        if (res.ok) {
+          showToast("Key status updated!");
+          setTimeout(() => location.reload(), 400);
+        }
+      } catch (err) {}
+    }
+
+    async function resetKeyUsage(id) {
+      if (!confirm("Data usage ကို 0 GB သို့ ပြန်လည်စတင် (Reset) လုပ်မှာ သေချာပါသလား?")) return;
+      try {
+        const res = await fetch(`/api/keys/${id}/reset-usage`, { method: "POST" });
+        if (res.ok) {
+          showToast("Data usage reset to 0 GB!");
+          setTimeout(() => location.reload(), 400);
+        }
+      } catch (err) {}
+    }
+
+    async function extendKeyExpiry(id) {
+      try {
+        const res = await fetch(`/api/keys/${id}/extend`, { method: "POST" });
+        if (res.ok) {
+          showToast("Extended 30 days successfully!");
+          setTimeout(() => location.reload(), 400);
+        }
+      } catch (err) {}
+    }
+
+    async function simulateTraffic(id, mb) {
+      try {
+        const res = await fetch(`/api/keys/${id}/simulate-traffic`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ added_mb: mb })
+        });
+        if (res.ok) {
+          showToast(`+${mb} MB simulated traffic added!`);
+          setTimeout(() => location.reload(), 400);
+        }
+      } catch (err) {}
+    }
+
+    async function deleteKey(id, name) {
+      if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+      try {
+        const res = await fetch(`/api/keys/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast("Key deleted!");
+          setTimeout(() => location.reload(), 400);
+        }
+      } catch (err) {}
+    }
+
+    async function deleteRouter(id, name) {
+      if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+      try {
+        const res = await fetch(`/api/routers/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast("Router profile deleted!");
+          setTimeout(() => location.reload(), 400);
+        }
+      } catch (err) {}
+    }
+
+    function viewAccessKeyQR(id, name, url) {
+      document.getElementById("qr-modal-title").innerText = `Scan Access Key - ${name}`;
+      const qrcodeBox = document.getElementById("qrcode-box");
+      qrcodeBox.innerHTML = "";
+
+      new QRCode(qrcodeBox, {
+        text: url,
+        width: 220,
+        height: 220,
+        colorDark : "#0f172a",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.M
+      });
+
+      openModal("modal-qr");
+    }
+
+    async function viewRouterSetup(type, id, name) {
+      const endpoint = type === 'openwrt' ? `/api/routers/${id}/openwrt` : `/api/routers/${id}/mikrotik`;
+      const res = await fetch(endpoint);
+      currentRouterScript = await res.text();
+
+      document.getElementById("router-script-title").innerText = `${type === 'openwrt' ? 'OpenWrt' : 'MikroTik'} Setup (${name})`;
+      document.getElementById("router-script-content").innerText = currentRouterScript;
+      openModal("modal-router-script");
+      lucide.createIcons();
+    }
+
+    function copyRouterScript() {
+      if (currentRouterScript) {
+        copyToClipboard(currentRouterScript, "Router script copied!");
+      }
+    }
+
+    async function submitServerSettings(e) {
+      e.preventDefault();
+      const endpoint = document.getElementById("input-server-endpoint").value;
+      const dns = document.getElementById("input-server-dns").value;
+
+      try {
+        const res = await fetch("/api/server/settings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ endpoint, dns, mtu: 1420 })
+        });
+        if (res.ok) {
+          showToast("Settings saved!");
+          closeModal("modal-server-settings");
+          setTimeout(() => location.reload(), 400);
+        }
+      } catch (err) {}
+    }
+  </script>
+</body>
+</html>

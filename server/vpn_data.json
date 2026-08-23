@@ -1,0 +1,46 @@
+{
+  "server": {
+    "private_key": "yOo82zgl3KyjJFxkU+W5YtZAU0T/DRQ5+7oFpAdJMEM=",
+    "public_key": "Ra85FS+7VM7AeuR+YQaomw17rE8EjA3RX/wigFgtf2Q=",
+    "address": "10.8.0.1/24",
+    "listen_port": 51820,
+    "endpoint": "127.0.0.1",
+    "dns": "1.1.1.1, 8.8.8.8",
+    "mtu": 1420
+  },
+  "clients": [
+    {
+      "id": "e84735b88a33",
+      "name": "Home-OpenWrt-Router",
+      "type": "openwrt",
+      "private_key": "8Ftt1TsWEtrOJJdFPiRDcaay3ZC2mTkqm9H2f0gkt1s=",
+      "public_key": "Ggeg812FqXHIkSY30obhZ1A6Eg59hu3rOgtKgr6eHXk=",
+      "allocated_ip": "10.8.0.2/32",
+      "allowed_ips": "10.8.0.2/32",
+      "created_at": "2026-08-23 16:40:00",
+      "enabled": true
+    },
+    {
+      "id": "7ca92719aade",
+      "name": "Office-MikroTik-Core",
+      "type": "mikrotik",
+      "private_key": "EJqu6tWQ1qWIKjRoXI7z4v2q8Z1hw9oYtwGdwa3HPWs=",
+      "public_key": "6uZBGwytRX88J/bUNnVE8+aI7sPrGCR/SMwNatdrHhY=",
+      "allocated_ip": "10.8.0.3/32",
+      "allowed_ips": "10.8.0.3/32",
+      "created_at": "2026-08-23 16:40:00",
+      "enabled": true
+    },
+    {
+      "id": "adf8c4018fa1",
+      "name": "Admin-iPhone-15",
+      "type": "phone",
+      "private_key": "gDqW64qh4+UcoJee8wEdeOOAfOa6Oy2TSX7XtYH+Rn4=",
+      "public_key": "wb9m75Upen7FqlYJBZy0xK8xIK91dIWcly2P8LHwinM=",
+      "allocated_ip": "10.8.0.4/32",
+      "allowed_ips": "10.8.0.4/32",
+      "created_at": "2026-08-23 16:40:00",
+      "enabled": true
+    }
+  ]
+}
