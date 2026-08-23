@@ -3,91 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Burmese VPN - Solid Pro Hub</title>
-  <!-- Tailwind CSS & Lucide Icons -->
+  <title>Burmese VPN — Dual-Engine Enterprise Hub</title>
+  
+  <!-- Tailwind CSS & Lucide Icons & QR Code -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- Typography: Plus Jakarta Sans & Padauk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Padauk:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"Padauk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
           colors: {
             app: {
-              bg: '#0c1017',
-              header: '#111722',
-              surface: '#151d2a',
-              card: '#192231',
-              cardHover: '#1f2b3e',
-              border: '#243144',
-              borderLight: '#2f3f56',
-            },
-            accent: {
-              primary: '#3b82f6',
-              primaryHover: '#2563eb',
-              indigo: '#4f46e5',
-              indigoHover: '#4338ca',
+              bg: '#090d14',
+              surface: '#111722',
+              card: '#161f2e',
+              cardHover: '#1c273a',
+              border: '#233044',
+              borderLight: '#2e3e57',
+              accent: '#3b82f6',
+              accentHover: '#2563eb'
             }
           }
         }
       }
     }
   </script>
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Padauk:wght@400;700&display=swap');
     body {
-      font-family: 'Plus Jakarta Sans', 'Padauk', sans-serif;
-      background-color: #0c1017;
+      background-color: #090d14;
       color: #f1f5f9;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-font-smoothing: antialiased;
     }
-    .custom-scroll::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
+    
+    /* Sleek Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: #243144;
-      border-radius: 4px;
+    ::-webkit-scrollbar-track {
+      background: #090d14;
     }
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
+    ::-webkit-scrollbar-thumb {
+      background: #233044;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
       background: #3b82f6;
+    }
+    
+    .glass-nav {
+      background: rgba(17, 23, 34, 0.85);
+      backdrop-filter: blur(16px);
     }
   </style>
 </head>
-<body class="min-h-screen selection:bg-blue-600 selection:text-white flex flex-col antialiased">
 
-  <!-- ================= TOP HEADER (Clean Solid Nav) ================= -->
-  <header class="border-b border-app-border bg-app-header sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<body class="min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="sticky top-0 z-40 w-full border-b border-app-border glass-nav">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       
       <!-- Brand Logo -->
-      <div class="flex items-center space-x-3.5">
-        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-md">
-          <i data-lucide="shield" class="w-5 h-5 text-white"></i>
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-blue-400/30">
+          <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-base font-bold text-white tracking-tight">Burmese VPN</h1>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase">PRO HUB</span>
+            <span class="font-extrabold text-white text-base tracking-tight">Burmese VPN</span>
+            <span class="text-[10px] font-extrabold tracking-wider uppercase px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">Pro Hub</span>
           </div>
-          <p class="text-[11px] text-slate-400">Mobile Outline/V2Ray Access & Router Gateway Engine</p>
+          <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Dual-Engine Gateway & Enterprise Cluster</p>
         </div>
       </div>
 
-      <!-- Quick Server Info & Settings -->
-      <div class="flex items-center space-x-3">
-        <div class="hidden md:flex items-center gap-2.5 px-3.5 py-1.5 rounded-lg bg-app-surface border border-app-border text-xs">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span class="text-slate-400 font-medium">Server IP:</span>
+      <!-- Quick Server Info & Actions -->
+      <div class="flex items-center space-x-2.5">
+        
+        <!-- Live Endpoint Pill -->
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-app-card border border-app-border text-xs">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="text-slate-400 font-medium">Core Host:</span>
           <span class="font-mono text-slate-200 font-bold">{{ server.endpoint }}</span>
         </div>
 
-        <button onclick="openServerSettingsModal()" class="px-3 py-1.5 rounded-lg border border-app-border bg-app-surface hover:bg-app-card text-slate-200 hover:text-white text-xs font-semibold flex items-center gap-1.5 transition">
+        <!-- Optimize Button -->
+        <button onclick="triggerServerOptimize()" class="px-3 py-1.5 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white border border-app-border text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Reclaim inactive memory & flush cache">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="hidden sm:inline">Optimize</span>
+        </button>
+
+        <!-- Settings Button -->
+        <button onclick="openServerSettingsModal()" class="px-3 py-1.5 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white border border-app-border text-xs font-semibold flex items-center gap-1.5 transition active:scale-95 shadow-sm">
           <i data-lucide="settings" class="w-3.5 h-3.5 text-blue-400"></i>
           <span>Settings</span>
         </button>
 
-        <a href="/logout" class="px-3 py-1.5 rounded-lg border border-rose-800/40 bg-rose-950/40 hover:bg-rose-600 text-rose-300 hover:text-white text-xs font-bold flex items-center gap-1.5 transition" title="Sign Out">
+        <!-- Sign Out Button -->
+        <a href="/logout" class="px-3 py-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/40 text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Sign Out">
           <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Sign Out</span>
         </a>
@@ -99,175 +130,191 @@
   <!-- ================= MAIN CONTAINER ================= -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
 
-    <!-- Automated System Watchdog & Resource Health Bar -->
-    <div class="bg-app-surface border border-app-border rounded-xl p-3 sm:p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 shadow-sm">
-      <div class="flex flex-wrap items-center gap-4 text-xs">
-        <div class="flex items-center gap-2">
-          <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
-          <span class="text-slate-400 font-medium">Auto-Watchdog:</span>
-          <span class="text-emerald-300 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/60 text-[11px]">Active & Guarding</span>
+    <!-- 1. LIVE SYSTEM HEALTH & WATCHDOG STATUS BAR -->
+    <div class="bg-app-surface border border-app-border rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        
+        <!-- Left: Status & Indicators -->
+        <div class="flex flex-wrap items-center gap-4 text-xs">
+          
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></div>
+            <span class="text-slate-400 font-medium">Self-Healing Watchdog:</span>
+            <span class="text-emerald-300 font-bold bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-800/60 text-[11px]">Active & Guarding</span>
+          </div>
+
+          <div class="h-4 w-px bg-app-border hidden sm:block"></div>
+
+          <div class="flex items-center gap-2">
+            <i data-lucide="cpu" class="w-4 h-4 text-blue-400"></i>
+            <span class="text-slate-400">CPU Load:</span>
+            <span class="font-mono text-slate-200 font-bold">{{ watchdog.cpu_percent }}%</span>
+          </div>
+
+          <div class="h-4 w-px bg-app-border hidden sm:block"></div>
+
+          <div class="flex items-center gap-2">
+            <i data-lucide="hard-drive" class="w-4 h-4 text-purple-400"></i>
+            <span class="text-slate-400">Memory:</span>
+            <span class="font-mono text-slate-200 font-bold">{{ watchdog.memory_percent }}% ({{ watchdog.memory_used_mb }} MB)</span>
+          </div>
+
         </div>
 
-        <div class="flex items-center gap-2">
-          <i data-lucide="cpu" class="w-4 h-4 text-blue-400"></i>
-          <span class="text-slate-400">CPU Load:</span>
-          <span class="font-mono text-slate-200 font-bold" id="metric-cpu">{{ watchdog.cpu_percent }}%</span>
+        <!-- Right: Node Counter & Anti-DDoS status -->
+        <div class="flex items-center gap-3 text-xs text-slate-400">
+          <span class="inline-flex items-center gap-1 text-[11px] font-mono bg-app-card px-2.5 py-1 rounded-md border border-app-border">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyan-400"></i>
+            TCP BBR & SYN-Shield
+          </span>
+          <span class="inline-flex items-center gap-1 text-[11px] font-mono bg-app-card px-2.5 py-1 rounded-md border border-app-border">
+            <i data-lucide="globe" class="w-3.5 h-3.5 text-emerald-400"></i>
+            {{ total_nodes }} Regional Nodes
+          </span>
         </div>
 
-        <div class="flex items-center gap-2">
-          <i data-lucide="hard-drive" class="w-4 h-4 text-purple-400"></i>
-          <span class="text-slate-400">Memory:</span>
-          <span class="font-mono text-slate-200 font-bold" id="metric-mem">{{ watchdog.memory_percent }}%</span>
-        </div>
-
-        <div class="hidden lg:flex items-center gap-2 text-slate-400">
-          <i data-lucide="shield-check" class="w-4 h-4 text-cyan-400"></i>
-          <span>High-Load Protection:</span>
-          <span class="font-mono text-slate-300 text-[11px]">Automated BBR & SYN-Shield</span>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-        <button onclick="triggerServerOptimize()" class="px-3 py-1.5 rounded-lg bg-app-card hover:bg-blue-600 text-slate-200 hover:text-white border border-app-border text-xs font-bold flex items-center gap-1.5 transition active:scale-95 shadow-sm" title="Reclaim inactive memory and flush buffers">
-          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span>⚡ Optimize Server</span>
-        </button>
       </div>
     </div>
 
-    <!-- PRIMARY TAB NAVIGATION (Solid High-Contrast Tabs) -->
-    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-app-surface p-1.5 rounded-xl border border-app-border">
+    <!-- 2. PRIMARY TAB SEGMENTED CONTROL -->
+    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-app-surface p-1.5 rounded-2xl border border-app-border shadow-sm">
       
       <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 sm:pb-0">
         <!-- Tab 1: Mobile Keys -->
-        <button onclick="switchTab('mobile')" id="tab-btn-mobile" class="px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-sm whitespace-nowrap">
+        <button onclick="switchTab('mobile')" id="tab-btn-mobile" class="px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-md shadow-blue-600/20 whitespace-nowrap">
           <i data-lucide="smartphone" class="w-4 h-4"></i>
-          <span>📱 Mobile Keys</span>
-          <span class="ml-1 px-2 py-0.5 rounded text-[10px] bg-black/20 font-mono">{{ total_keys }}</span>
+          <span>📱 Mobile Keys (Outline/V2Ray)</span>
+          <span class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-black/25 font-mono">{{ total_keys }}</span>
         </button>
 
         <!-- Tab 2: Routers -->
-        <button onclick="switchTab('router')" id="tab-btn-router" class="px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap">
+        <button onclick="switchTab('router')" id="tab-btn-router" class="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap">
           <i data-lucide="router" class="w-4 h-4"></i>
           <span>🌐 Router Gateways</span>
-          <span class="ml-1 px-2 py-0.5 rounded text-[10px] bg-app-bg font-mono text-slate-400">{{ total_routers }}</span>
+          <span class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-app-bg font-mono text-slate-400">{{ total_routers }}</span>
         </button>
 
         <!-- Tab 3: Server Nodes -->
-        <button onclick="switchTab('node')" id="tab-btn-node" class="px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap">
+        <button onclick="switchTab('node')" id="tab-btn-node" class="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap">
           <i data-lucide="globe" class="w-4 h-4"></i>
-          <span>🌍 Server Nodes (US/SG/JP/DE)</span>
-          <span class="ml-1 px-2 py-0.5 rounded text-[10px] bg-app-bg font-mono text-slate-400">{{ total_nodes }}</span>
+          <span>🌍 Server Nodes (SG/JP/US/DE)</span>
+          <span class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-app-bg font-mono text-slate-400">{{ total_nodes }}</span>
         </button>
       </div>
 
-      <!-- Action Button based on Tab -->
+      <!-- Action Buttons Based on Tab -->
       <div class="flex items-center gap-2 shrink-0">
+        
+        <!-- Mobile Actions -->
         <div id="tab-action-mobile" class="flex items-center gap-2">
-          <a href="/api/keys/export" download class="px-3.5 py-2.5 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-200 hover:text-white text-xs font-bold border border-app-border flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm" title="Export all active keys as .txt file">
+          <a href="/api/keys/export" download class="px-3.5 py-2.5 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-200 hover:text-white text-xs font-bold border border-app-border flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm" title="Export all active keys as .txt file">
             <i data-lucide="download" class="w-4 h-4 text-emerald-400"></i>
             <span class="hidden sm:inline">Export Keys</span>
           </a>
-          <button onclick="openAddKeyModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm">
+          <button onclick="openAddKeyModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-md shadow-blue-600/20">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span>Create Key</span>
           </button>
         </div>
 
+        <!-- Router Actions -->
         <div id="tab-action-router" class="hidden">
-          <button onclick="openAddRouterModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm">
+          <button onclick="openAddRouterModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-md shadow-amber-600/20">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span>Add Router Gateway</span>
           </button>
         </div>
 
+        <!-- Node Actions -->
         <div id="tab-action-node" class="hidden">
-          <button onclick="openAddNodeModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-sm">
+          <button onclick="openAddNodeModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition active:scale-95 shadow-md shadow-emerald-600/20">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span>Add Server Node</span>
           </button>
         </div>
+
       </div>
 
     </div>
 
     <!-- ============================================================== -->
-    <!-- VIEW 1: MOBILE ACCESS KEYS (OUTLINE / V2RAY STYLE) - LIST VIEW -->
+    <!-- VIEW 1: MOBILE ACCESS KEYS (OUTLINE / V2RAY) -->
     <!-- ============================================================== -->
     <div id="view-mobile" class="space-y-5">
 
-      <!-- Metric Stats Bar (Solid Stat Boxes) -->
+      <!-- Metric Stats Cards -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
         
-        <div class="bg-app-surface border border-app-border rounded-xl p-4 flex items-center justify-between shadow-sm">
+        <div class="bg-app-surface border border-app-border rounded-2xl p-4 flex items-center justify-between shadow-sm">
           <div>
             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Keys</div>
             <div class="text-2xl font-black text-white mt-1">{{ total_keys }}</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-blue-600/10 text-blue-400 border border-blue-500/20">
+          <div class="p-3 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20">
             <i data-lucide="key" class="w-5 h-5"></i>
           </div>
         </div>
 
-        <div class="bg-app-surface border border-app-border rounded-xl p-4 flex items-center justify-between shadow-sm">
+        <div class="bg-app-surface border border-app-border rounded-2xl p-4 flex items-center justify-between shadow-sm">
           <div>
             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Active Keys</div>
             <div class="text-2xl font-black text-emerald-400 mt-1">{{ active_keys }}</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-emerald-600/10 text-emerald-400 border border-emerald-500/20">
-            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+          <div class="p-3 rounded-xl bg-emerald-600/10 text-emerald-400 border border-emerald-500/20">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
           </div>
         </div>
 
-        <div class="bg-app-surface border border-app-border rounded-xl p-4 flex items-center justify-between shadow-sm">
+        <div class="bg-app-surface border border-app-border rounded-2xl p-4 flex items-center justify-between shadow-sm">
           <div>
-            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Core Protocol</div>
-            <div class="text-xs font-bold text-slate-200 mt-1.5 font-mono">ChaCha20-Poly1305</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Cipher Protocol</div>
+            <div class="text-sm font-black font-mono text-slate-200 mt-1">ChaCha20-Poly1305</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-purple-600/10 text-purple-400 border border-purple-500/20">
+          <div class="p-3 rounded-xl bg-purple-600/10 text-purple-400 border border-purple-500/20">
             <i data-lucide="lock" class="w-5 h-5"></i>
           </div>
         </div>
 
-        <div class="bg-app-surface border border-app-border rounded-xl p-4 flex items-center justify-between shadow-sm">
+        <div class="bg-app-surface border border-app-border rounded-2xl p-4 flex items-center justify-between shadow-sm">
           <div>
-            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">App Support</div>
-            <div class="text-xs font-bold text-slate-300 mt-1 truncate">Outline, v2rayNG, Shadowrocket</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Multi-Node Switching</div>
+            <div class="text-sm font-black text-emerald-400 mt-1">🇸🇬 🇯🇵 🇺🇸 🇩🇪 Enabled</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-cyan-600/10 text-cyan-400 border border-cyan-500/20">
-            <i data-lucide="smartphone" class="w-5 h-5"></i>
+          <div class="p-3 rounded-xl bg-amber-600/10 text-amber-400 border border-amber-500/20">
+            <i data-lucide="globe-2" class="w-5 h-5"></i>
           </div>
         </div>
 
       </div>
 
-      <!-- Search & Filter Controls -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-app-surface p-3 rounded-xl border border-app-border">
-        <div class="relative w-full sm:w-72">
-          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-          <input type="text" id="filter-search" oninput="applyKeyFilter()" placeholder="Search user name or port..." class="w-full pl-9 pr-3 py-2 rounded-lg bg-app-bg border border-app-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition">
+      <!-- Keys Table -->
+      <div class="bg-app-surface rounded-2xl shadow-md border border-app-border overflow-hidden min-h-[300px]">
+        
+        <!-- Table Search & Filter Bar -->
+        <div class="p-4 border-b border-app-border flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="relative w-full sm:w-80">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" id="filter-keys-input" onkeyup="filterKeys()" placeholder="Search user name or port..." class="w-full pl-10 pr-4 py-2 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none transition placeholder:text-slate-500">
+          </div>
+
+          <div class="flex items-center space-x-1.5 w-full sm:w-auto overflow-x-auto">
+            <button onclick="setKeyFilter('all')" id="btn-filter-all" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition">All ({{ total_keys }})</button>
+            <button onclick="setKeyFilter('active')" id="btn-filter-active" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-app-card transition border border-app-border">Active ({{ active_keys }})</button>
+            <button onclick="setKeyFilter('expired')" id="btn-filter-expired" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-app-card transition border border-app-border">Expired</button>
+          </div>
         </div>
 
-        <div class="flex items-center space-x-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
-          <button onclick="setFilterStatus('all')" id="btn-filter-all" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white">All ({{ total_keys }})</button>
-          <button onclick="setFilterStatus('active')" id="btn-filter-active" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-app-card hover:bg-app-cardHover border border-app-border transition">Active</button>
-          <button onclick="setFilterStatus('expired')" id="btn-filter-expired" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-app-card hover:bg-app-cardHover border border-app-border transition">Expired / Full</button>
-        </div>
-      </div>
-
-      <!-- ================= LIST / TABLE VIEW FOR MOBILE KEYS ================= -->
-      <div class="bg-app-surface border border-app-border rounded-xl shadow-md overflow-hidden min-h-[360px]">
         <div class="overflow-x-auto custom-scroll">
           <table class="w-full text-left text-xs border-collapse">
             <thead>
               <tr class="border-b border-app-border bg-app-card text-slate-300 font-bold uppercase tracking-wider text-[11px]">
-                <th class="py-3 px-4">User / Key Name</th>
-                <th class="py-3 px-4">Status</th>
-                <th class="py-3 px-4 min-w-[200px]">Data Quota Usage</th>
-                <th class="py-3 px-4">Expiration (သက်တမ်း)</th>
-                <th class="py-3 px-4">Device Limit</th>
-                <th class="py-3 px-4 min-w-[220px]">Access Key (ss://)</th>
-                <th class="py-3 px-4 text-right">Settings</th>
+                <th class="py-3.5 px-4">User / Key Name</th>
+                <th class="py-3.5 px-4">Status</th>
+                <th class="py-3.5 px-4">Data Quota Usage</th>
+                <th class="py-3.5 px-4">Expiry Date</th>
+                <th class="py-3.5 px-4">Device Limit</th>
+                <th class="py-3.5 px-4">Access Key (ss://)</th>
+                <th class="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody id="keys-table-body" class="divide-y divide-app-border">
@@ -277,8 +324,8 @@
                   
                   <!-- 1. Name & Port -->
                   <td class="py-3.5 px-4 font-semibold text-white">
-                    <div class="flex items-center gap-2.5">
-                      <div class="w-8 h-8 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xs">
+                    <div class="flex items-center gap-3">
+                      <div class="w-8 h-8 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-xs">
                         {{ key.name[:1] | upper }}
                       </div>
                       <div>
@@ -290,30 +337,30 @@
                     </div>
                   </td>
 
-                  <!-- 2. Status Badge (Solid Badges) -->
+                  <!-- 2. Status Badge -->
                   <td class="py-3.5 px-4 whitespace-nowrap">
                     {% if key.status == 'active' %}
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/60">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/60">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Active
                       </span>
                     {% elif key.status == 'expired' %}
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold bg-rose-950/80 text-rose-300 border border-rose-700/60">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-950/80 text-rose-300 border border-rose-700/60">
                         <span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Expired
                       </span>
                     {% elif key.status == 'quota_exceeded' %}
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
                         <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Quota Full
                       </span>
                     {% else %}
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
                         Paused
                       </span>
                     {% endif %}
                   </td>
 
-                  <!-- 3. Data Usage Progress (Solid Bar) -->
+                  <!-- 3. Data Usage Progress -->
                   <td class="py-3.5 px-4">
-                    <div class="space-y-1.5">
+                    <div class="space-y-1.5 min-w-[140px]">
                       <div class="flex justify-between items-center text-[11px]">
                         <span class="font-bold text-slate-200 font-mono">{{ key.used_readable }} / {{ key.limit_readable }}</span>
                         <span class="text-slate-400 text-[10px] font-bold">{{ key.usage_percent }}%</span>
@@ -339,32 +386,33 @@
 
                   <!-- 5. Device Limit -->
                   <td class="py-3.5 px-4 whitespace-nowrap">
-                    <span class="px-2.5 py-1 rounded bg-app-card border border-app-border font-mono text-[11px] text-slate-300 font-bold">
-                      {{ key.max_devices }} Device{% if key.max_devices > 1 %}s{% endif %}
+                    <span class="inline-flex items-center gap-1 font-mono font-bold text-slate-300">
+                      <i data-lucide="smartphone" class="w-3.5 h-3.5 text-slate-400"></i>
+                      {{ key.max_devices }} {{ 'Device' if key.max_devices == 1 else 'Devices' }}
                     </span>
                   </td>
 
-                  <!-- 6. Access Key Quick Strip -->
+                  <!-- 6. Access Key Input Box -->
                   <td class="py-3.5 px-4">
-                    <div class="flex items-center gap-1.5 bg-app-bg p-1.5 rounded-lg border border-app-border max-w-xs">
+                    <div class="flex items-center space-x-1.5 bg-app-bg px-2.5 py-1.5 rounded-xl border border-app-border max-w-[220px]">
                       <input readonly value="{{ key.access_url }}" class="bg-transparent border-none text-[10px] font-mono text-blue-300 truncate w-full focus:outline-none select-all cursor-pointer font-medium" onclick="this.select()">
-                      <button onclick="copyToClipboard('{{ key.access_url }}', 'Access Key copied! Paste into Outline or v2rayNG.')" class="p-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white transition active:scale-95 shrink-0" title="Copy Key">
+                      <button onclick="copyToClipboard('{{ key.access_url }}', 'Access Key copied! Paste into Outline or v2rayNG.')" class="p-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition active:scale-95 shrink-0" title="Copy Key">
                         <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                       </button>
-                      <button onclick="viewAccessKeyQR('{{ key.id }}', '{{ key.name }}', '{{ key.access_url }}')" class="p-1.5 rounded bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white transition shrink-0 border border-app-border" title="Show QR Code">
+                      <button onclick="viewAccessKeyQR('{{ key.id }}', '{{ key.name }}', '{{ key.access_url }}')" class="p-1.5 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white transition shrink-0 border border-app-border" title="Show QR Code">
                         <i data-lucide="qr-code" class="w-3.5 h-3.5"></i>
                       </button>
                     </div>
                   </td>
 
-                  <!-- 7. Actions Row (Opens Settings Form Modal & PC Setup) -->
+                  <!-- 7. Actions Row (PC Setup & Settings) -->
                   <td class="py-3.5 px-4 text-right whitespace-nowrap space-x-1.5">
-                    <button onclick="openPcSetupModal('{{ key.id }}', '{{ key.name }}', '{{ key.access_url }}')" class="px-3 py-1.5 rounded-lg bg-app-card hover:bg-emerald-600 text-slate-200 hover:text-white border border-app-border hover:border-emerald-500 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95" title="PC Desktop Setup (Windows / Mac / Linux)">
+                    <button onclick="openPcSetupModal('{{ key.id }}', '{{ key.name }}', '{{ key.access_url }}')" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-emerald-600 text-slate-200 hover:text-white border border-app-border hover:border-emerald-500 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95" title="PC Desktop Setup (Windows / Mac / Linux)">
                       <i data-lucide="monitor" class="w-3.5 h-3.5 text-emerald-400"></i>
                       <span>PC Setup</span>
                     </button>
-                    <button onclick="openKeySettingsModal('{{ key.id }}', '{{ key.name }}', {{ key.data_limit_gb }}, {{ key.max_devices }}, {{ 'true' if key.enabled else 'false' }}, '{{ key.used_readable }}', '{{ key.limit_readable }}', '{{ key.expire_date }}', '{{ key.time_left_readable }}')" class="px-3 py-1.5 rounded-lg bg-app-card hover:bg-blue-600 text-slate-200 hover:text-white border border-app-border hover:border-blue-500 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
-                      <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
+                    <button onclick="openKeySettingsModal('{{ key.id }}', '{{ key.name }}', {{ key.data_limit_gb }}, {{ key.max_devices }}, {{ 'true' if key.enabled else 'false' }}, '{{ key.used_readable }}', '{{ key.limit_readable }}', '{{ key.expire_date }}', '{{ key.time_left_readable }}')" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-blue-600 text-slate-200 hover:text-white border border-app-border hover:border-blue-500 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
+                      <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-blue-400"></i>
                       <span>Settings</span>
                     </button>
                   </td>
@@ -374,11 +422,11 @@
               {% else %}
                 <tr>
                   <td colspan="7" class="py-12 text-center text-slate-400">
-                    <div class="w-12 h-12 rounded-lg bg-app-card border border-app-border flex items-center justify-center mx-auto mb-2 text-blue-400">
+                    <div class="w-12 h-12 rounded-xl bg-app-card border border-app-border flex items-center justify-center mx-auto mb-2 text-blue-400">
                       <i data-lucide="key-round" class="w-6 h-6"></i>
                     </div>
                     <div class="font-bold text-white text-sm">No Mobile Access Keys Created</div>
-                    <p class="text-xs text-slate-500 mt-1">Click "Create New Access Key" to generate a key with Data & Date limits.</p>
+                    <p class="text-xs text-slate-500 mt-1">Click "Create Key" to generate a key with Data & Date limits.</p>
                   </td>
                 </tr>
               {% endif %}
@@ -390,148 +438,143 @@
     </div>
 
     <!-- ============================================================== -->
-    <!-- VIEW 2: ROUTER GATEWAYS (OPENWRT / MIKROTIK) - LIST VIEW -->
+    <!-- VIEW 2: ROUTER GATEWAYS (OPENWRT / MIKROTIK / H3C) -->
     <!-- ============================================================== -->
     <div id="view-router" class="space-y-5 hidden">
       
-      <!-- Router Protocol Info Bar (Solid Boxes) -->
+      <!-- Router Overview Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+        <div class="bg-app-surface border border-app-border rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Router Gateways</div>
-            <div class="text-2xl font-black text-white mt-1">{{ total_routers }}</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Connected Routers</div>
+            <div class="text-2xl font-black text-amber-400 mt-1">{{ total_routers }} Gateways</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-amber-600/10 text-amber-400 border border-amber-500/20">
+          <div class="p-3 rounded-xl bg-amber-600/10 text-amber-400 border border-amber-500/20">
             <i data-lucide="router" class="w-5 h-5"></i>
           </div>
         </div>
 
-        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+        <div class="bg-app-surface border border-app-border rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">WireGuard Subnet</div>
-            <div class="text-base font-bold font-mono text-slate-200 mt-1">{{ server.address }}</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">WireGuard Interface</div>
+            <div class="text-base font-bold font-mono text-slate-200 mt-1">wg-burmese (10.66.0.1)</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-blue-600/10 text-blue-400 border border-blue-500/20">
+          <div class="p-3 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20">
             <i data-lucide="network" class="w-5 h-5"></i>
           </div>
         </div>
 
-        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+        <div class="bg-app-surface border border-app-border rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Routing Mode</div>
-            <div class="text-sm font-bold text-emerald-400 mt-1">Full LAN NAT Forwarding</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Router Protocol</div>
+            <div class="text-sm font-bold text-slate-200 mt-1">Kernel-Level WireGuard UDP</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-emerald-600/10 text-emerald-400 border border-emerald-500/20">
-            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          <div class="p-3 rounded-xl bg-emerald-600/10 text-emerald-400 border border-emerald-500/20">
+            <i data-lucide="shield" class="w-5 h-5"></i>
           </div>
         </div>
       </div>
 
-      <!-- Search & Filter Controls for Routers -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-app-surface p-3 rounded-xl border border-app-border">
-        <div class="relative w-full sm:w-72">
-          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-          <input type="text" id="filter-router-search" oninput="applyRouterFilter()" placeholder="Search router name or IP..." class="w-full pl-9 pr-3 py-2 rounded-lg bg-app-bg border border-app-border text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition">
+      <!-- Router Gateways Table -->
+      <div class="bg-app-surface rounded-2xl shadow-md border border-app-border overflow-hidden min-h-[300px]">
+        <div class="p-4 border-b border-app-border flex items-center justify-between">
+          <h3 class="font-bold text-white text-xs flex items-center gap-2">
+            <i data-lucide="router" class="w-4 h-4 text-amber-400"></i>
+            <span>Active Router Gateways List</span>
+          </h3>
+          <span class="text-[11px] text-slate-400 font-mono">{{ total_routers }} Configured</span>
         </div>
 
-        <div class="flex items-center space-x-1.5 w-full sm:w-auto">
-          <span class="text-xs text-slate-400 font-medium">Total Gateways: <strong class="text-amber-300 font-mono">{{ total_routers }}</strong></span>
-        </div>
-      </div>
-
-      <!-- ================= LIST / TABLE VIEW FOR ROUTER GATEWAYS ================= -->
-      <div class="bg-app-surface rounded-xl shadow-md border border-app-border overflow-hidden min-h-[280px]">
         <div class="overflow-x-auto custom-scroll">
           <table class="w-full text-left text-xs border-collapse">
             <thead>
               <tr class="border-b border-app-border bg-app-card text-slate-300 font-bold uppercase tracking-wider text-[11px]">
-                <th class="py-3 px-4">Router Name</th>
-                <th class="py-3 px-4">System Type</th>
-                <th class="py-3 px-4">Assigned VPN IP</th>
-                <th class="py-3 px-4">Public Key</th>
-                <th class="py-3 px-4">Setup Script / Config</th>
-                <th class="py-3 px-4 text-right">Actions</th>
+                <th class="py-3.5 px-4">Gateway Name</th>
+                <th class="py-3.5 px-4">System Type</th>
+                <th class="py-3.5 px-4">Assigned IP (Subnet)</th>
+                <th class="py-3.5 px-4">WireGuard Public Key</th>
+                <th class="py-3.5 px-4">1-Click Setup</th>
+                <th class="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody id="routers-table-body" class="divide-y divide-app-border">
               {% if router_clients %}
                 {% for router in router_clients %}
-                <tr class="router-row hover:bg-app-card/60 transition group" data-name="{{ router.name | lower }}" data-ip="{{ router.allocated_ip }}">
+                <tr class="router-row hover:bg-app-card/60 transition group">
                   
-                  <!-- 1. Router Name -->
+                  <!-- 1. Name -->
                   <td class="py-3.5 px-4 font-semibold text-white">
-                    <div class="flex items-center gap-2.5">
-                      <div class="w-8 h-8 rounded-lg bg-amber-600/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-xs">
+                    <div class="flex items-center gap-3">
+                      <div class="w-8 h-8 rounded-xl bg-amber-600/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-xs">
                         <i data-lucide="router" class="w-4 h-4"></i>
                       </div>
                       <div>
-                        <div class="font-bold text-slate-100 flex items-center gap-1.5">
-                          {{ router.name }}
-                        </div>
-                        <div class="text-[10px] text-slate-400 font-mono">ID: #{{ router.id }}</div>
+                        <div class="font-bold text-slate-100">{{ router.name }}</div>
+                        <div class="text-[10px] text-slate-400">Added: {{ router.created_at[:10] }}</div>
                       </div>
                     </div>
                   </td>
 
-                  <!-- 2. System Type Badge (Solid Badges) -->
+                  <!-- 2. System Type -->
                   <td class="py-3.5 px-4 whitespace-nowrap">
-                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-bold font-mono uppercase
-                      {% if router.type == 'openwrt' %}bg-amber-950/80 text-amber-300 border border-amber-700/60
-                      {% elif router.type == 'mikrotik' %}bg-sky-950/80 text-sky-300 border border-sky-700/60
-                      {% elif router.type == 'h3c_magic' %}bg-purple-950/80 text-purple-300 border border-purple-700/60
-                      {% else %}bg-slate-800 text-slate-300 border border-slate-700{% endif %}">
-                      {{ router.type }}
+                    {% if router.type == 'mikrotik' %}
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-950/80 text-blue-300 border border-blue-700/60">
+                        MikroTik RouterOS v7
+                      </span>
+                    {% elif router.type == 'h3c_magic' %}
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-cyan-950/80 text-cyan-300 border border-cyan-700/60">
+                        H3C Magic NX30 / B365
+                      </span>
+                    {% else %}
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
+                        OpenWrt Gateway
+                      </span>
+                    {% endif %}
+                  </td>
+
+                  <!-- 3. Assigned IP -->
+                  <td class="py-3.5 px-4 whitespace-nowrap">
+                    <span class="font-mono text-amber-300 font-bold bg-app-bg px-2.5 py-1 rounded-lg border border-app-border text-[11px]">
+                      {{ router.ip_address }}
                     </span>
                   </td>
 
-                  <!-- 3. Assigned VPN IP -->
-                  <td class="py-3.5 px-4 whitespace-nowrap">
-                    <span class="font-mono text-slate-200 font-bold bg-app-bg px-2.5 py-1 rounded border border-app-border text-[11px]">
-                      {{ router.allocated_ip }}
-                    </span>
-                  </td>
-
-                  <!-- 4. Public Key Strip -->
+                  <!-- 4. Public Key -->
                   <td class="py-3.5 px-4">
-                    <div class="flex items-center gap-1.5 font-mono text-[10px] text-slate-400 max-w-[160px] truncate" title="{{ router.public_key }}">
+                    <span class="font-mono text-[10px] text-slate-400 bg-app-bg px-2 py-1 rounded-lg border border-app-border block truncate max-w-[140px]" title="{{ router.public_key }}">
                       {{ router.public_key }}
-                    </div>
+                    </span>
                   </td>
 
-                  <!-- 5. Setup Scripts -->
+                  <!-- 5. Setup Action -->
                   <td class="py-3.5 px-4 whitespace-nowrap">
-                    <div class="flex items-center gap-1.5">
-                      {% if router.type == 'openwrt' %}
-                        <button onclick="viewRouterSetup('openwrt', '{{ router.id }}', '{{ router.name }}')" class="px-2.5 py-1.5 rounded bg-amber-600/15 hover:bg-amber-600 text-amber-300 hover:text-white border border-amber-600/30 text-[11px] font-bold flex items-center gap-1 transition">
-                          <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-                          <span>OpenWrt Script</span>
-                        </button>
-                      {% elif router.type == 'mikrotik' %}
-                        <button onclick="viewRouterSetup('mikrotik', '{{ router.id }}', '{{ router.name }}')" class="px-2.5 py-1.5 rounded bg-sky-600/15 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-600/30 text-[11px] font-bold flex items-center gap-1 transition">
-                          <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                    <div class="flex items-center space-x-1.5">
+                      {% if router.type == 'mikrotik' %}
+                        <button onclick="viewRouterSetup('mikrotik', '{{ router.id }}', '{{ router.name }}')" class="px-2.5 py-1.5 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-[11px] font-semibold flex items-center gap-1 transition border border-app-border">
+                          <i data-lucide="terminal" class="w-3.5 h-3.5 text-blue-400"></i>
                           <span>MikroTik Script</span>
                         </button>
                       {% elif router.type == 'h3c_magic' %}
-                        <button onclick="viewRouterSetup('h3c', '{{ router.id }}', '{{ router.name }}')" class="px-2.5 py-1.5 rounded bg-purple-600/15 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-600/30 text-[11px] font-bold flex items-center gap-1 transition">
-                          <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-                          <span>H3C Magic Script</span>
+                        <button onclick="viewRouterSetup('h3c', '{{ router.id }}', '{{ router.name }}')" class="px-2.5 py-1.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-900/80 text-cyan-300 text-[11px] font-semibold flex items-center gap-1 transition border border-cyan-800/60">
+                          <i data-lucide="cpu" class="w-3.5 h-3.5 text-cyan-400"></i>
+                          <span>H3C Setup</span>
                         </button>
                       {% else %}
-                        <button onclick="viewRouterSetup('openwrt', '{{ router.id }}', '{{ router.name }}')" class="px-2.5 py-1.5 rounded bg-app-card hover:bg-app-cardHover text-slate-300 text-[11px] font-semibold flex items-center gap-1 transition border border-app-border">
-                          <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
-                          <span>Setup Script</span>
+                        <button onclick="viewRouterSetup('openwrt', '{{ router.id }}', '{{ router.name }}')" class="px-2.5 py-1.5 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-[11px] font-semibold flex items-center gap-1 transition border border-app-border">
+                          <i data-lucide="terminal" class="w-3.5 h-3.5 text-amber-400"></i>
+                          <span>OpenWrt Script</span>
                         </button>
                       {% endif %}
 
-                      <a href="/api/routers/{{ router.id }}/conf" class="p-1.5 rounded bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white transition border border-app-border" title="Download .conf file">
+                      <a href="/api/routers/{{ router.id }}/conf" class="p-1.5 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white transition border border-app-border" title="Download .conf file">
                         <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
                       </a>
                     </div>
                   </td>
 
-                  <!-- 6. Actions Row (Delete) -->
+                  <!-- 6. Delete Action -->
                   <td class="py-3.5 px-4 text-right whitespace-nowrap">
-                    <button onclick="deleteRouter('{{ router.id }}', '{{ router.name }}')" class="px-3 py-1.5 rounded bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/60 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
+                    <button onclick="deleteRouter('{{ router.id }}', '{{ router.name }}')" class="px-3 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/60 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
                       <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                       <span>Delete</span>
                     </button>
@@ -542,67 +585,71 @@
               {% else %}
                 <tr>
                   <td colspan="6" class="py-12 text-center text-slate-400">
-                    <div class="w-12 h-12 rounded-lg bg-app-card border border-app-border flex items-center justify-center mx-auto mb-2 text-amber-400">
+                    <div class="w-12 h-12 rounded-xl bg-app-card border border-app-border flex items-center justify-center mx-auto mb-2 text-amber-400">
                       <i data-lucide="router" class="w-6 h-6"></i>
                     </div>
                     <div class="font-bold text-white text-sm">No Router Gateways Added</div>
-                    <p class="text-xs text-slate-500 mt-1">Click "Add Router Gateway" to generate OpenWrt / MikroTik / H3C config script.</p>
+                    <p class="text-xs text-slate-500 mt-1">Click "Add Router Gateway" to generate OpenWrt / MikroTik / H3C script.</p>
                   </td>
                 </tr>
               {% endif %}
             </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
 
     <!-- ============================================================== -->
-    <!-- VIEW 3: SERVER NODES CLUSTER (US / SG / JP / DE) - LIST VIEW -->
+    <!-- VIEW 3: SERVER NODES CLUSTER (US / SG / JP / DE) -->
     <!-- ============================================================== -->
     <div id="view-node" class="space-y-5 hidden">
       
-      <!-- Nodes Overview Info Bar -->
+      <!-- Nodes Overview Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+        <div class="bg-app-surface rounded-2xl p-4 flex items-center justify-between border border-app-border">
           <div>
             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Active Nodes</div>
-            <div class="text-2xl font-black text-white mt-1">{{ total_nodes }} Regions</div>
+            <div class="text-2xl font-black text-emerald-400 mt-1">{{ total_nodes }} Regions</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-emerald-600/10 text-emerald-400 border border-emerald-500/20">
+          <div class="p-3 rounded-xl bg-emerald-600/10 text-emerald-400 border border-emerald-500/20">
             <i data-lucide="globe" class="w-5 h-5"></i>
           </div>
         </div>
 
-        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+        <div class="bg-app-surface rounded-2xl p-4 flex items-center justify-between border border-app-border">
           <div>
             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Master Hub Endpoint</div>
             <div class="text-base font-bold font-mono text-slate-200 mt-1">{{ server.endpoint }}</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-blue-600/10 text-blue-400 border border-blue-500/20">
+          <div class="p-3 rounded-xl bg-blue-600/10 text-blue-400 border border-blue-500/20">
             <i data-lucide="server" class="w-5 h-5"></i>
           </div>
         </div>
 
-        <div class="bg-app-surface rounded-xl p-4 flex items-center justify-between border border-app-border">
+        <div class="bg-app-surface rounded-2xl p-4 flex items-center justify-between border border-app-border">
           <div>
             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Multi-Node Subscriptions</div>
             <div class="text-sm font-bold text-emerald-400 mt-1">Unified Multi-Region Export</div>
           </div>
-          <div class="p-2.5 rounded-lg bg-purple-600/10 text-purple-400 border border-purple-500/20">
+          <div class="p-3 rounded-xl bg-purple-600/10 text-purple-400 border border-purple-500/20">
             <i data-lucide="layers" class="w-5 h-5"></i>
           </div>
         </div>
       </div>
 
       <!-- Server Nodes Table -->
-      <div class="bg-app-surface rounded-xl shadow-md border border-app-border overflow-hidden min-h-[280px]">
+      <div class="bg-app-surface rounded-2xl shadow-md border border-app-border overflow-hidden min-h-[300px]">
         <div class="overflow-x-auto custom-scroll">
           <table class="w-full text-left text-xs border-collapse">
             <thead>
               <tr class="border-b border-app-border bg-app-card text-slate-300 font-bold uppercase tracking-wider text-[11px]">
-                <th class="py-3 px-4">Region / Node Name</th>
-                <th class="py-3 px-4">Country</th>
-                <th class="py-3 px-4">Server Host / IP</th>
-                <th class="py-3 px-4">Estimated Latency</th>
-                <th class="py-3 px-4">Status</th>
-                <th class="py-3 px-4 text-right">Actions</th>
+                <th class="py-3.5 px-4">Region / Node Name</th>
+                <th class="py-3.5 px-4">Country</th>
+                <th class="py-3.5 px-4">Server Host / IP</th>
+                <th class="py-3.5 px-4">Estimated Latency</th>
+                <th class="py-3.5 px-4">Status</th>
+                <th class="py-3.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody id="nodes-table-body" class="divide-y divide-app-border">
@@ -618,7 +665,7 @@
                         <div class="font-bold text-slate-100 flex items-center gap-2">
                           {{ node.name }}
                           {% if node.is_master %}
-                            <span class="text-[9px] font-extrabold px-2 py-0.5 rounded bg-blue-600/20 text-blue-300 border border-blue-500/30 uppercase">Master Hub</span>
+                            <span class="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-blue-600/20 text-blue-300 border border-blue-500/30 uppercase">Master Hub</span>
                           {% endif %}
                         </div>
                         <div class="text-[10px] text-slate-400">{{ node.description }}</div>
@@ -633,14 +680,14 @@
 
                   <!-- 3. Host / IP -->
                   <td class="py-3.5 px-4 whitespace-nowrap">
-                    <span class="font-mono text-blue-300 font-bold bg-app-bg px-2.5 py-1 rounded border border-app-border text-[11px]">
+                    <span class="font-mono text-blue-300 font-bold bg-app-bg px-2.5 py-1 rounded-lg border border-app-border text-[11px]">
                       {{ node.endpoint }}
                     </span>
                   </td>
 
                   <!-- 4. Latency / Ping -->
                   <td class="py-3.5 px-4 whitespace-nowrap">
-                    <span class="inline-flex items-center gap-1 font-mono font-bold
+                    <span class="inline-flex items-center gap-1.5 font-mono font-bold
                       {% if node.ping_ms <= 50 %}text-emerald-400
                       {% elif node.ping_ms <= 100 %}text-amber-400
                       {% else %}text-slate-300{% endif %}">
@@ -652,20 +699,20 @@
                   <!-- 5. Status -->
                   <td class="py-3.5 px-4 whitespace-nowrap">
                     {% if node.status == 'online' %}
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/60">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-700/60">
                         Online
                       </span>
                     {% else %}
-                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
                         Maintenance
                       </span>
                     {% endif %}
                   </td>
 
-                  <!-- 6. Delete action -->
+                  <!-- 6. Delete Action -->
                   <td class="py-3.5 px-4 text-right whitespace-nowrap">
                     {% if not node.is_master %}
-                      <button onclick="deleteNode('{{ node.id }}', '{{ node.name }}')" class="px-3 py-1.5 rounded bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/60 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
+                      <button onclick="deleteNode('{{ node.id }}', '{{ node.name }}')" class="px-3 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/60 inline-flex items-center gap-1.5 text-xs font-bold transition active:scale-95">
                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         <span>Delete</span>
                       </button>
@@ -689,8 +736,8 @@
   <!-- ================= MODALS ================= -->
 
   <!-- Modal 1: Create Key Modal -->
-  <div id="modal-add-key" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-app-surface rounded-xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
+  <div id="modal-add-key" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-2xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
       <div class="flex items-center justify-between border-b border-app-border pb-3.5">
         <h3 class="text-sm font-bold text-white flex items-center gap-2">
           <i data-lucide="key-round" class="w-4 h-4 text-blue-400"></i>
@@ -704,102 +751,83 @@
       <form id="form-add-key" onsubmit="submitAddKey(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">User / Device Name</label>
-          <input type="text" id="input-key-name" required placeholder="e.g. Ko Min - VIP 30 Days" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none transition">
+          <input type="text" id="input-key-name" required placeholder="e.g. Mg Mg (iPhone)" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Data Limit (GB)</label>
-            <select id="input-key-data" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
-              <option value="10">10 GB</option>
-              <option value="20" selected>20 GB</option>
-              <option value="50">50 GB</option>
-              <option value="100">100 GB</option>
-              <option value="0">Unlimited (အကန့်အသတ်မရှိ)</option>
-            </select>
+            <input type="number" id="input-key-quota" required min="1" max="1000" value="20" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Expiry (သက်တမ်း)</label>
-            <select id="input-key-expiry" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
-              <option value="7">7 Days (၁ ပတ်)</option>
-              <option value="30" selected>30 Days (၁ လ)</option>
-              <option value="90">90 Days (၃ လ)</option>
-              <option value="365">1 Year (၁ နှစ်)</option>
-              <option value="0">Unlimited (အကန့်အသတ်မရှိ)</option>
-            </select>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Validity (Days)</label>
+            <input type="number" id="input-key-days" required min="1" max="365" value="30" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">Max Devices Limit</label>
-          <select id="input-key-devices" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
-            <option value="1" selected>1 Device (၁ လုံးသီးသန့်)</option>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Max Devices</label>
+          <select id="input-key-devices" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
+            <option value="1">1 Device (Standard)</option>
             <option value="2">2 Devices</option>
             <option value="3">3 Devices</option>
-            <option value="5">5 Devices</option>
+            <option value="5">5 Devices (Family)</option>
           </select>
         </div>
 
         <div class="pt-2 flex items-center justify-end gap-2">
-          <button type="button" onclick="closeModal('modal-add-key')" class="px-4 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5">
-            <i data-lucide="check" class="w-4 h-4"></i> Generate
+          <button type="button" onclick="closeModal('modal-add-key')" class="px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-blue-600/20">
+            <i data-lucide="check" class="w-4 h-4"></i> Generate Key
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal: Key Settings & Management Form -->
-  <div id="modal-key-settings" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-app-surface rounded-xl max-w-lg w-full p-6 border border-app-border shadow-2xl space-y-5">
-      
-      <!-- Modal Header -->
+  <!-- Modal 2: Single-Row Key Settings Form Modal -->
+  <div id="modal-key-settings" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-2xl max-w-lg w-full p-6 border border-app-border shadow-2xl space-y-5">
       <div class="flex items-center justify-between border-b border-app-border pb-3.5">
-        <div class="flex items-center gap-2.5">
-          <div class="p-2 rounded-lg bg-blue-600/10 text-blue-400 border border-blue-500/20">
-            <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              Key Settings & Management Form
-            </h3>
-            <p class="text-[11px] text-slate-400" id="setting-form-key-id-display">Key ID: ...</p>
-          </div>
-        </div>
-        <button onclick="closeModal('modal-key-settings')" class="text-slate-400 hover:text-white p-1">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="sliders-horizontal" class="w-4 h-4 text-blue-400"></i>
+          <span id="settings-modal-title">Access Key Settings</span>
+        </h3>
+        <button onclick="closeModal('modal-key-settings')" class="text-slate-400 hover:text-white">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <!-- Main Edit Form -->
-      <form id="form-edit-key-settings" onsubmit="submitKeySettings(event)" class="space-y-4">
-        <input type="hidden" id="setting-key-id">
-
-        <!-- 1. Profile Name -->
-        <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1">User / Device Name (အမည်)</label>
-          <input type="text" id="setting-key-name" required class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
+      <form id="form-key-settings" onsubmit="submitKeySettings(event)" class="space-y-4">
+        
+        <!-- Live Quick Stats Banner -->
+        <div class="grid grid-cols-2 gap-2.5 p-3 rounded-xl bg-app-bg border border-app-border text-[11px]">
+          <div>
+            <span class="text-slate-400 block">Current Usage:</span>
+            <span class="font-bold text-white font-mono" id="settings-current-usage">0 GB / 20 GB</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block">Expiration:</span>
+            <span class="font-bold text-emerald-400" id="settings-current-expiry">30 Days left</span>
+          </div>
         </div>
 
-        <!-- 2. Data Limit & Max Devices -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">User / Device Name</label>
+          <input type="text" id="settings-input-name" required class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Data Quota Limit</label>
-            <select id="setting-key-data-limit" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
-              <option value="10">10 GB</option>
-              <option value="20">20 GB</option>
-              <option value="50">50 GB</option>
-              <option value="100">100 GB</option>
-              <option value="0">Unlimited (အကန့်အသတ်မရှိ)</option>
-            </select>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Data Quota (GB)</label>
+            <input type="number" id="settings-input-quota" required min="1" max="2000" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Max Devices</label>
-            <select id="setting-key-max-devices" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
-              <option value="1">1 Device (၁ လုံးသီးသန့်)</option>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Device Limit</label>
+            <select id="settings-input-devices" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
+              <option value="1">1 Device</option>
               <option value="2">2 Devices</option>
               <option value="3">3 Devices</option>
               <option value="5">5 Devices</option>
@@ -807,56 +835,37 @@
           </div>
         </div>
 
-        <!-- 3. Status Switch (Active / Disabled) -->
-        <div class="bg-app-bg p-3 rounded-lg border border-app-border flex items-center justify-between">
-          <div>
-            <div class="text-xs font-semibold text-slate-200">Account Status</div>
-            <div class="text-[11px] text-slate-400">Enable or temporarily pause VPN access</div>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="setting-key-enabled" class="sr-only peer">
-            <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-          </label>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Account Status</label>
+          <select id="settings-input-enabled" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
+            <option value="true">🟢 Active (Enabled)</option>
+            <option value="false">🔴 Paused (Disabled)</option>
+          </select>
         </div>
 
-        <!-- 4. Quick Operations Panel in Form -->
-        <div class="bg-app-bg p-3.5 rounded-lg border border-app-border space-y-3">
-          <div class="text-xs font-bold text-slate-300 flex items-center justify-between">
-            <span>Quick Operations (လုပ်ဆောင်ချက်များ)</span>
-            <span class="text-[10px] text-slate-400 font-normal font-mono" id="setting-usage-display">Usage: 0 MB</span>
-          </div>
-          
-          <div class="grid grid-cols-3 gap-2">
-            <!-- Reset 0 GB -->
-            <button type="button" onclick="keySettingsResetUsage()" class="p-2.5 rounded-lg bg-app-card hover:bg-blue-600 hover:text-white text-slate-300 border border-app-border text-[11px] font-bold flex flex-col items-center gap-1 transition">
-              <i data-lucide="rotate-ccw" class="w-4 h-4 text-blue-400"></i>
-              <span>Reset 0 GB</span>
-            </button>
+        <!-- Quick Action Buttons Inside Settings Form -->
+        <div class="pt-2 border-t border-app-border flex flex-wrap items-center gap-2">
+          <button type="button" onclick="keySettingsResetUsage()" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-200 text-xs font-semibold border border-app-border flex items-center gap-1.5 transition active:scale-95">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-blue-400"></i>
+            <span>Reset Data to 0 GB</span>
+          </button>
 
-            <!-- +1 GB Test -->
-            <button type="button" onclick="keySettingsSimulate()" class="p-2.5 rounded-lg bg-app-card hover:bg-amber-600 hover:text-white text-slate-300 border border-app-border text-[11px] font-bold flex flex-col items-center gap-1 transition">
-              <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
-              <span>+1 GB Test</span>
-            </button>
-
-            <!-- +30 Days Extend -->
-            <button type="button" onclick="keySettingsExtend()" class="p-2.5 rounded-lg bg-app-card hover:bg-purple-600 hover:text-white text-slate-300 border border-app-border text-[11px] font-bold flex flex-col items-center gap-1 transition">
-              <i data-lucide="calendar-plus" class="w-4 h-4 text-purple-400"></i>
-              <span>+30 Days</span>
-            </button>
-          </div>
+          <button type="button" onclick="keySettingsExtend()" class="px-3 py-1.5 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-200 text-xs font-semibold border border-app-border flex items-center gap-1.5 transition active:scale-95">
+            <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>+30 Days Extend</span>
+          </button>
         </div>
 
-        <!-- 5. Footer Buttons -->
-        <div class="pt-2 flex items-center justify-between border-t border-app-border">
-          <button type="button" onclick="keySettingsDelete()" class="px-3.5 py-2 rounded-lg bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/60 text-xs font-bold flex items-center gap-1.5 transition">
+        <!-- Form Submit Bar -->
+        <div class="pt-3 border-t border-app-border flex items-center justify-between">
+          <button type="button" onclick="keySettingsDelete()" class="px-3 py-1.5 rounded-xl bg-rose-950/60 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-800/60 text-xs font-bold flex items-center gap-1.5 transition active:scale-95">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
             <span>Delete Key</span>
           </button>
 
           <div class="flex items-center gap-2">
-            <button type="button" onclick="closeModal('modal-key-settings')" class="px-4 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
-            <button type="submit" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5">
+            <button type="button" onclick="closeModal('modal-key-settings')" class="px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-blue-600/20">
               <i data-lucide="save" class="w-4 h-4"></i>
               <span>Save Changes</span>
             </button>
@@ -867,9 +876,9 @@
     </div>
   </div>
 
-  <!-- Modal 2: Add Router Modal -->
-  <div id="modal-add-router" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-app-surface rounded-xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
+  <!-- Modal 3: Add Router Modal -->
+  <div id="modal-add-router" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-2xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
       <div class="flex items-center justify-between border-b border-app-border pb-3.5">
         <h3 class="text-sm font-bold text-white flex items-center gap-2">
           <i data-lucide="router" class="w-4 h-4 text-amber-400"></i>
@@ -883,12 +892,12 @@
       <form id="form-add-router" onsubmit="submitAddRouter(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Router Name</label>
-          <input type="text" id="input-router-name" required placeholder="e.g. Home-OpenWrt-Router" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-amber-500 focus:outline-none">
+          <input type="text" id="input-router-name" required placeholder="e.g. Home-OpenWrt-Router" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-amber-500 focus:outline-none">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Router System</label>
-          <select id="input-router-type" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-amber-500 focus:outline-none">
+          <select id="input-router-type" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-amber-500 focus:outline-none">
             <option value="openwrt">🌐 OpenWrt Router</option>
             <option value="mikrotik">📶 MikroTik Router (RouterOS v7)</option>
             <option value="h3c_magic">🏢 H3C Magic Router (NX30 Pro, B365, etc.)</option>
@@ -897,8 +906,8 @@
         </div>
 
         <div class="pt-2 flex items-center justify-end gap-2">
-          <button type="button" onclick="closeModal('modal-add-router')" class="px-4 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5">
+          <button type="button" onclick="closeModal('modal-add-router')" class="px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-600/20">
             <i data-lucide="check" class="w-4 h-4"></i> Add Gateway
           </button>
         </div>
@@ -906,9 +915,9 @@
     </div>
   </div>
 
-  <!-- Modal: Add Server Node Modal -->
-  <div id="modal-add-node" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-app-surface rounded-xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
+  <!-- Modal 4: Add Server Node Modal -->
+  <div id="modal-add-node" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-2xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
       <div class="flex items-center justify-between border-b border-app-border pb-3.5">
         <h3 class="text-sm font-bold text-white flex items-center gap-2">
           <i data-lucide="globe" class="w-4 h-4 text-emerald-400"></i>
@@ -922,7 +931,7 @@
       <form id="form-add-node" onsubmit="submitAddNode(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Region / Country</label>
-          <select id="input-node-country" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+          <select id="input-node-country" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
             <option value="SG">🇸🇬 Singapore (SG)</option>
             <option value="JP">🇯🇵 Japan (JP)</option>
             <option value="US">🇺🇸 United States (US)</option>
@@ -937,22 +946,22 @@
 
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Node Display Name</label>
-          <input type="text" id="input-node-name" required placeholder="e.g. Singapore SG-02 (High Speed)" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+          <input type="text" id="input-node-name" required placeholder="e.g. Singapore SG-02 (High Speed)" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Server Host / IP Address</label>
-          <input type="text" id="input-node-endpoint" required placeholder="e.g. sg2.burmesevpn.com or 128.199.x.x" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+          <input type="text" id="input-node-endpoint" required placeholder="e.g. sg2.burmesevpn.com or 128.199.x.x" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Description / Notes (Optional)</label>
-          <input type="text" id="input-node-desc" placeholder="e.g. Optimized for Gaming & Streaming" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
+          <input type="text" id="input-node-desc" placeholder="e.g. Optimized for Gaming & Streaming" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-emerald-500 focus:outline-none">
         </div>
 
         <div class="pt-2 flex items-center justify-end gap-2">
-          <button type="button" onclick="closeModal('modal-add-node')" class="px-4 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5">
+          <button type="button" onclick="closeModal('modal-add-node')" class="px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-emerald-600/20">
             <i data-lucide="check" class="w-4 h-4"></i> Add Server Node
           </button>
         </div>
@@ -960,8 +969,8 @@
     </div>
   </div>
 
-  <!-- Modal: PC Setup Modal -->
-  <div id="modal-pc-setup" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
+  <!-- Modal 5: PC Setup Modal -->
+  <div id="modal-pc-setup" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
     <div class="bg-app-surface rounded-2xl max-w-xl w-full p-6 border border-app-border shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto custom-scroll">
       <div class="flex items-center justify-between border-b border-app-border pb-3.5">
         <h3 class="text-sm font-bold text-white flex items-center gap-2">
@@ -982,12 +991,12 @@
               <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px]">1</span>
               Outline PC Client (အလွယ်ဆုံး ၁ ချက်နှိပ်ချိတ်ဆက်နည်း)
             </span>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/60">Recommended</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-800/60">Recommended</span>
           </div>
           <p class="text-slate-400 text-[11px]">Outline Windows/Mac app တွင် အောက်ပါ Key ကို Copy ကူးပြီး ထည့်သွင်းရုံဖြင့် တစ်ကွန်ပျူတာလုံး VPN အလိုအလျောက် ပွင့်သွားပါမည်။</p>
-          <div class="flex items-center gap-2 bg-[#0c1017] p-2 rounded-lg border border-app-border">
+          <div class="flex items-center gap-2 bg-[#090d14] p-2 rounded-xl border border-app-border">
             <input type="text" id="pc-outline-key" readonly class="bg-transparent text-[11px] font-mono text-blue-300 truncate w-full focus:outline-none select-all">
-            <button onclick="copyToClipboard(document.getElementById('pc-outline-key').value, 'Outline Key Copied!')" class="px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1 shrink-0">
+            <button onclick="copyToClipboard(document.getElementById('pc-outline-key').value, 'Outline Key Copied!')" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1 shrink-0">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy
             </button>
           </div>
@@ -1009,11 +1018,11 @@
           </div>
           <p class="text-slate-400 text-[11px]">Clash Verge Rev သို့မဟုတ် v2rayN တွင် Node ၄ ခုလုံး (SG/JP/US/DE) ပါဝင်ပြီး Auto Fast-Ping ရွေးချယ်ပေးမည့် Profile ကို ဒေါင်းလုဒ်ရယူပါ။</p>
           <div class="flex flex-wrap items-center gap-2">
-            <a id="pc-clash-download" href="#" class="px-3.5 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white font-bold flex items-center gap-1.5 transition">
+            <a id="pc-clash-download" href="#" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold flex items-center gap-1.5 transition shadow-sm">
               <i data-lucide="download" class="w-4 h-4"></i>
               <span>Download Clash Profile (.yaml)</span>
             </a>
-            <button onclick="copyToClipboard(currentPcSubUrl, 'Subscription URL copied! Paste into Clash or v2rayN.')" class="px-3.5 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-200 font-semibold border border-app-border flex items-center gap-1.5 transition">
+            <button onclick="copyToClipboard(currentPcSubUrl, 'Subscription URL copied! Paste into Clash or v2rayN.')" class="px-3.5 py-2 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-200 font-semibold border border-app-border flex items-center gap-1.5 transition">
               <i data-lucide="link" class="w-4 h-4 text-emerald-400"></i>
               <span>Copy Subscription URL</span>
             </button>
@@ -1023,51 +1032,56 @@
       </div>
 
       <div class="pt-2 flex justify-end">
-        <button onclick="closeModal('modal-pc-setup')" class="px-5 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Close</button>
+        <button onclick="closeModal('modal-pc-setup')" class="px-5 py-2 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal 3: QR Code Modal -->
-  <div id="modal-qr" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-app-surface rounded-xl max-w-sm w-full p-6 border border-app-border shadow-2xl text-center space-y-4">
+  <!-- Modal 6: QR Code Modal -->
+  <div id="modal-qr" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-2xl max-w-sm w-full p-6 border border-app-border shadow-2xl text-center space-y-4">
       <div class="flex items-center justify-between border-b border-app-border pb-3.5">
         <h3 class="text-xs font-bold text-white" id="qr-modal-title">Scan Access Key</h3>
         <button onclick="closeModal('modal-qr')" class="text-slate-400 hover:text-white">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
-      <div class="bg-white p-4 rounded-lg inline-block mx-auto shadow-sm" id="qrcode-box"></div>
+      <div class="bg-white p-4 rounded-xl inline-block mx-auto shadow-sm" id="qrcode-box"></div>
       <p class="text-[11px] text-slate-400">Outline, v2rayNG သို့မဟုတ် Shadowrocket App မှ Scan ဖတ်၍ ချက်ချင်းချိတ်ဆက်နိုင်ပါသည်။</p>
     </div>
   </div>
 
-  <!-- Modal 4: Router Script Viewer -->
-  <div id="modal-router-script" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-app-surface rounded-xl max-w-2xl w-full p-6 border border-app-border shadow-2xl space-y-4">
+  <!-- Modal 7: Router Script Viewer -->
+  <div id="modal-router-script" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-2xl max-w-2xl w-full p-6 border border-app-border shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-app-border pb-3.5">
-        <div class="flex items-center gap-2">
-          <i id="router-script-icon" data-lucide="terminal" class="w-4 h-4 text-amber-400"></i>
-          <h3 class="text-sm font-bold text-white" id="router-script-title">Router Setup Script</h3>
-        </div>
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="terminal" class="w-4 h-4 text-amber-400"></i>
+          <span id="router-script-title">Router Setup Script</span>
+        </h3>
         <button onclick="closeModal('modal-router-script')" class="text-slate-400 hover:text-white">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
+      
+      <p class="text-xs text-slate-400">Router Terminal (SSH) ထဲသို့ အောက်ပါ command များကို paste လုပ်၍ run လိုက်ပါ:</p>
+      
+      <div class="relative bg-app-bg p-4 rounded-xl border border-app-border max-h-60 overflow-y-auto custom-scroll">
+        <pre id="router-script-content" class="text-[11px] font-mono text-amber-300 select-all"></pre>
+      </div>
 
-      <pre id="router-script-content" class="bg-app-bg p-4 rounded-lg border border-app-border text-[11px] font-mono text-emerald-400 max-h-72 overflow-y-auto custom-scroll whitespace-pre-wrap select-all"></pre>
-
-      <div class="flex items-center justify-end gap-2">
-        <button onclick="copyRouterScript()" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5">
-          <i data-lucide="copy" class="w-4 h-4"></i> Copy All
+      <div class="flex items-center justify-end space-x-2 pt-2">
+        <button onclick="closeModal('modal-router-script')" class="px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Close</button>
+        <button onclick="copyToClipboard(currentRouterScript, 'Router Setup script copied!')" class="px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-600/20">
+          <i data-lucide="copy" class="w-4 h-4"></i> Copy Script
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Modal 5: Server Settings Modal -->
-  <div id="modal-server-settings" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-app-surface rounded-xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
+  <!-- Modal 8: Server Settings Modal -->
+  <div id="modal-server-settings" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-app-surface rounded-2xl max-w-md w-full p-6 border border-app-border shadow-2xl space-y-5">
       <div class="flex items-center justify-between border-b border-app-border pb-3.5">
         <h3 class="text-sm font-bold text-white flex items-center gap-2">
           <i data-lucide="settings" class="w-4 h-4 text-blue-400"></i>
@@ -1081,38 +1095,40 @@
       <form id="form-server-settings" onsubmit="submitServerSettings(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Public Server IP / Hostname</label>
-          <input type="text" id="input-server-endpoint" required value="{{ server.endpoint }}" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
+          <input type="text" id="input-server-endpoint" required value="{{ server.endpoint }}" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">DNS Servers</label>
-          <input type="text" id="input-server-dns" value="{{ server.dns }}" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
+          <input type="text" id="input-server-dns" value="{{ server.dns }}" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-slate-300 mb-1">Change Admin Password (အသစ်ပြောင်းရန်)</label>
-          <input type="password" id="input-admin-password" placeholder="Leave empty to keep current password" class="w-full px-3.5 py-2.5 rounded-lg bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
+          <input type="password" id="input-admin-password" placeholder="Leave empty to keep current password" class="w-full px-3.5 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none">
         </div>
 
         <div class="pt-2 flex items-center justify-end gap-2">
-          <button type="button" onclick="closeModal('modal-server-settings')" class="px-4 py-2 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold">Save Changes</button>
+          <button type="button" onclick="closeModal('modal-server-settings')" class="px-4 py-2 rounded-xl bg-app-card hover:bg-app-cardHover text-slate-300 text-xs font-semibold border border-app-border">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/20">Save Changes</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-blue-600 text-white px-4 py-2.5 rounded-lg shadow-2xl text-xs font-bold transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 border border-blue-500/40">
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-blue-600 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 border border-blue-400/40">
     <i data-lucide="check-circle" class="w-4 h-4"></i>
     <span id="toast-msg">Success</span>
   </div>
 
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
   <script>
     lucide.createIcons();
 
     let currentRouterScript = "";
     let currentFilterStatus = "all";
+    let currentPcSubUrl = "";
 
     function switchTab(tab) {
       const viewMobile = document.getElementById("view-mobile");
@@ -1136,22 +1152,22 @@
       actRouter.classList.add("hidden");
       actNode.classList.add("hidden");
 
-      btnMobile.className = "px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
-      btnRouter.className = "px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
-      btnNode.className = "px-4 py-2.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
+      btnMobile.className = "px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
+      btnRouter.className = "px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
+      btnNode.className = "px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-2 hover:bg-app-card whitespace-nowrap";
 
       if (tab === 'mobile') {
         viewMobile.classList.remove("hidden");
         actMobile.classList.remove("hidden");
-        btnMobile.className = "px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-sm whitespace-nowrap";
+        btnMobile.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-blue-600 text-white shadow-md shadow-blue-600/20 whitespace-nowrap";
       } else if (tab === 'router') {
         viewRouter.classList.remove("hidden");
         actRouter.classList.remove("hidden");
-        btnRouter.className = "px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-amber-600 text-white shadow-sm whitespace-nowrap";
+        btnRouter.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-amber-600 text-white shadow-md shadow-amber-600/20 whitespace-nowrap";
       } else if (tab === 'node') {
         viewNode.classList.remove("hidden");
         actNode.classList.remove("hidden");
-        btnNode.className = "px-4 py-2.5 rounded-lg text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-sm whitespace-nowrap";
+        btnNode.className = "px-5 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-emerald-600 text-white shadow-md shadow-emerald-600/20 whitespace-nowrap";
       }
       lucide.createIcons();
     }
@@ -1171,81 +1187,129 @@
       });
     }
 
-    function closeModal(modalId) {
-      const el = document.getElementById(modalId);
-      el.classList.add("hidden");
-      el.classList.remove("flex");
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
     }
 
-    function openModal(modalId) {
-      const el = document.getElementById(modalId);
-      el.classList.remove("hidden");
-      el.classList.add("flex");
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
     }
 
-    function openAddKeyModal() { openModal("modal-add-key"); }
-    function openAddRouterModal() { openModal("modal-add-router"); }
-    function openServerSettingsModal() { openModal("modal-server-settings"); }
+    function openAddKeyModal() {
+      openModal("modal-add-key");
+    }
 
-    function setFilterStatus(status) {
-      currentFilterStatus = status;
-      ['all', 'active', 'expired'].forEach(s => {
-        const btn = document.getElementById(`btn-filter-${s}`);
-        if (s === status) {
-          btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white";
+    function openAddRouterModal() {
+      openModal("modal-add-router");
+    }
+
+    function openAddNodeModal() {
+      openModal("modal-add-node");
+    }
+
+    function openServerSettingsModal() {
+      openModal("modal-server-settings");
+    }
+
+    function openPcSetupModal(keyId, keyName, accessUrl) {
+      document.getElementById("pc-outline-key").value = accessUrl;
+      document.getElementById("pc-clash-download").href = `/api/keys/${keyId}/clash`;
+      currentPcSubUrl = `${window.location.origin}/sub/${keyId}`;
+      openModal("modal-pc-setup");
+      lucide.createIcons();
+    }
+
+    // Modal Single-Row Key Settings State
+    let activeSettingKeyId = "";
+    let activeSettingKeyName = "";
+
+    function openKeySettingsModal(id, name, quotaGb, maxDevices, enabled, usedReadable, limitReadable, expireDate, timeLeft) {
+      activeSettingKeyId = id;
+      activeSettingKeyName = name;
+
+      document.getElementById("settings-modal-title").innerText = `Settings: ${name}`;
+      document.getElementById("settings-current-usage").innerText = `${usedReadable} / ${limitReadable}`;
+      document.getElementById("settings-current-expiry").innerText = `${timeLeft} (${expireDate})`;
+
+      document.getElementById("settings-input-name").value = name;
+      document.getElementById("settings-input-quota").value = quotaGb;
+      document.getElementById("settings-input-devices").value = maxDevices;
+      document.getElementById("settings-input-enabled").value = enabled ? "true" : "false";
+
+      openModal("modal-key-settings");
+      lucide.createIcons();
+    }
+
+    async function submitKeySettings(e) {
+      e.preventDefault();
+      const name = document.getElementById("settings-input-name").value;
+      const data_limit_gb = parseFloat(document.getElementById("settings-input-quota").value);
+      const max_devices = parseInt(document.getElementById("settings-input-devices").value);
+      const enabled = document.getElementById("settings-input-enabled").value === "true";
+
+      try {
+        const res = await fetch(`/api/keys/${activeSettingKeyId}/update`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, data_limit_gb, max_devices, enabled })
+        });
+        if (res.ok) {
+          showToast("Key settings saved successfully!");
+          closeModal("modal-key-settings");
+          setTimeout(() => location.reload(), 300);
         } else {
-          btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white bg-app-card hover:bg-app-cardHover border border-app-border transition";
+          const err = await res.json();
+          alert(err.detail || "Failed to update key");
         }
-      });
-      applyKeyFilter();
+      } catch (err) {
+        alert("Network error occurred");
+      }
     }
 
-    function applyKeyFilter() {
-      const query = document.getElementById("filter-search").value.toLowerCase().trim();
-      const rows = document.querySelectorAll(".key-row");
-
-      rows.forEach(row => {
-        const name = row.getAttribute("data-name") || "";
-        const port = row.getAttribute("data-port") || "";
-        const status = row.getAttribute("data-status") || "";
-
-        const matchQuery = !query || name.includes(query) || port.includes(query);
-        let matchStatus = true;
-
-        if (currentFilterStatus === 'active') {
-          matchStatus = (status === 'active');
-        } else if (currentFilterStatus === 'expired') {
-          matchStatus = (status === 'expired' || status === 'quota_exceeded' || status === 'disabled');
+    async function keySettingsResetUsage() {
+      if (!confirm(`Reset data usage of "${activeSettingKeyName}" to 0 GB?`)) return;
+      try {
+        const res = await fetch(`/api/keys/${activeSettingKeyId}/reset-usage`, { method: "POST" });
+        if (res.ok) {
+          showToast("Data usage reset to 0 GB!");
+          closeModal("modal-key-settings");
+          setTimeout(() => location.reload(), 300);
         }
-
-        if (matchQuery && matchStatus) {
-          row.classList.remove("hidden");
-        } else {
-          row.classList.add("hidden");
-        }
-      });
+      } catch (err) {}
     }
 
-    function applyRouterFilter() {
-      const query = document.getElementById("filter-router-search").value.toLowerCase().trim();
-      const rows = document.querySelectorAll(".router-row");
-
-      rows.forEach(row => {
-        const name = row.getAttribute("data-name") || "";
-        const ip = row.getAttribute("data-ip") || "";
-        if (!query || name.includes(query) || ip.includes(query)) {
-          row.classList.remove("hidden");
-        } else {
-          row.classList.add("hidden");
+    async function keySettingsExtend() {
+      try {
+        const res = await fetch(`/api/keys/${activeSettingKeyId}/extend`, { method: "POST" });
+        if (res.ok) {
+          showToast("Extended 30 days!");
+          closeModal("modal-key-settings");
+          setTimeout(() => location.reload(), 300);
         }
-      });
+      } catch (err) {}
+    }
+
+    async function keySettingsDelete() {
+      if (!confirm(`Are you sure you want to delete "${activeSettingKeyName}"?`)) return;
+      try {
+        const res = await fetch(`/api/keys/${activeSettingKeyId}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast("Key deleted!");
+          closeModal("modal-key-settings");
+          setTimeout(() => location.reload(), 300);
+        }
+      } catch (err) {}
     }
 
     async function submitAddKey(e) {
       e.preventDefault();
       const name = document.getElementById("input-key-name").value;
-      const data_limit_gb = parseFloat(document.getElementById("input-key-data").value);
-      const expire_days = parseInt(document.getElementById("input-key-expiry").value);
+      const data_limit_gb = parseFloat(document.getElementById("input-key-quota").value);
+      const expire_days = parseInt(document.getElementById("input-key-days").value);
       const max_devices = parseInt(document.getElementById("input-key-devices").value);
 
       try {
@@ -1255,12 +1319,15 @@
           body: JSON.stringify({ name, data_limit_gb, expire_days, max_devices })
         });
         if (res.ok) {
-          showToast("Access Key generated successfully!");
+          showToast("Key generated successfully!");
           closeModal("modal-add-key");
-          setTimeout(() => location.reload(), 400);
+          setTimeout(() => location.reload(), 300);
+        } else {
+          const err = await res.json();
+          alert(err.detail || "Failed to create key");
         }
       } catch (err) {
-        alert("Failed to create key");
+        alert("Network error");
       }
     }
 
@@ -1276,82 +1343,16 @@
           body: JSON.stringify({ name, type })
         });
         if (res.ok) {
-          showToast("Router gateway added!");
+          showToast("Router Gateway added successfully!");
           closeModal("modal-add-router");
-          setTimeout(() => location.reload(), 400);
-        }
-      } catch (err) {}
-    }
-
-    async function toggleKeyStatus(id) {
-      try {
-        const res = await fetch(`/api/keys/${id}/toggle`, { method: "POST" });
-        if (res.ok) {
-          showToast("Status updated!");
           setTimeout(() => location.reload(), 300);
+        } else {
+          const err = await res.json();
+          alert(err.detail || "Failed to add router");
         }
-      } catch (err) {}
-    }
-
-    async function resetKeyUsage(id) {
-      if (!confirm("Data usage ကို 0 GB သို့ ပြန်လည်စတင် (Reset) လုပ်မှာ သေချာပါသလား?")) return;
-      try {
-        const res = await fetch(`/api/keys/${id}/reset-usage`, { method: "POST" });
-        if (res.ok) {
-          showToast("Data usage reset to 0 GB!");
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
-    }
-
-    async function extendKeyExpiry(id) {
-      try {
-        const res = await fetch(`/api/keys/${id}/extend`, { method: "POST" });
-        if (res.ok) {
-          showToast("Extended 30 days!");
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
-    }
-
-    async function simulateTraffic(id, mb) {
-      try {
-        const res = await fetch(`/api/keys/${id}/simulate-traffic`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ added_mb: mb })
-        });
-        if (res.ok) {
-          showToast(`+${mb} MB simulated traffic added!`);
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
-    }
-
-    async function deleteKey(id, name) {
-      if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
-      try {
-        const res = await fetch(`/api/keys/${id}`, { method: "DELETE" });
-        if (res.ok) {
-          showToast("Key deleted!");
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
-    }
-
-    async function deleteRouter(id, name) {
-      if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
-      try {
-        const res = await fetch(`/api/routers/${id}`, { method: "DELETE" });
-        if (res.ok) {
-          showToast("Router deleted!");
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
-    }
-
-    function openAddNodeModal() {
-      openModal("modal-add-node");
+      } catch (err) {
+        alert("Network error");
+      }
     }
 
     async function submitAddNode(e) {
@@ -1391,14 +1392,15 @@
       } catch (err) {}
     }
 
-    let currentPcSubUrl = "";
-
-    function openPcSetupModal(keyId, keyName, accessUrl) {
-      document.getElementById("pc-outline-key").value = accessUrl;
-      document.getElementById("pc-clash-download").href = `/api/keys/${keyId}/clash`;
-      currentPcSubUrl = `${window.location.origin}/sub/${keyId}`;
-      openModal("modal-pc-setup");
-      lucide.createIcons();
+    async function deleteRouter(id, name) {
+      if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+      try {
+        const res = await fetch(`/api/routers/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          showToast("Router deleted!");
+          setTimeout(() => location.reload(), 300);
+        }
+      } catch (err) {}
     }
 
     function viewAccessKeyQR(id, name, url) {
@@ -1410,7 +1412,7 @@
         text: url,
         width: 220,
         height: 220,
-        colorDark : "#0c1017",
+        colorDark : "#090d14",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.M
       });
@@ -1437,108 +1439,6 @@
       document.getElementById("router-script-content").innerText = currentRouterScript;
       openModal("modal-router-script");
       lucide.createIcons();
-    }
-
-    function copyRouterScript() {
-      if (currentRouterScript) {
-        copyToClipboard(currentRouterScript, "Router script copied!");
-      }
-    }
-
-    // ================= KEY SETTINGS FORM HANDLERS =================
-    let activeSettingKeyId = "";
-    let activeSettingKeyName = "";
-
-    function openKeySettingsModal(id, name, dataLimitGb, maxDevices, enabled, usedReadable, limitReadable, expireDate, timeLeft) {
-      activeSettingKeyId = id;
-      activeSettingKeyName = name;
-
-      document.getElementById("setting-key-id").value = id;
-      document.getElementById("setting-form-key-id-display").innerText = `Key ID: #${id} • Port: Auto`;
-      document.getElementById("setting-key-name").value = name;
-      document.getElementById("setting-key-data-limit").value = String(dataLimitGb);
-      document.getElementById("setting-key-max-devices").value = String(maxDevices);
-      document.getElementById("setting-key-enabled").checked = Boolean(enabled);
-      document.getElementById("setting-usage-display").innerText = `Current: ${usedReadable} / ${limitReadable} (${timeLeft})`;
-
-      openModal("modal-key-settings");
-      lucide.createIcons();
-    }
-
-    async function submitKeySettings(e) {
-      e.preventDefault();
-      const id = document.getElementById("setting-key-id").value;
-      const name = document.getElementById("setting-key-name").value;
-      const data_limit_gb = parseFloat(document.getElementById("setting-key-data-limit").value);
-      const max_devices = parseInt(document.getElementById("setting-key-max-devices").value);
-      const enabled = document.getElementById("setting-key-enabled").checked;
-
-      try {
-        const res = await fetch(`/api/keys/${id}/update`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, data_limit_gb, max_devices, enabled })
-        });
-        if (res.ok) {
-          showToast("Key settings saved successfully!");
-          closeModal("modal-key-settings");
-          setTimeout(() => location.reload(), 300);
-        } else {
-          alert("Failed to save settings");
-        }
-      } catch (err) {
-        alert("Error saving settings");
-      }
-    }
-
-    async function keySettingsResetUsage() {
-      if (!confirm("Data usage ကို 0 GB သို့ ပြန်လည်စတင် (Reset) လုပ်မှာ သေချာပါသလား?")) return;
-      try {
-        const res = await fetch(`/api/keys/${activeSettingKeyId}/reset-usage`, { method: "POST" });
-        if (res.ok) {
-          showToast("Data usage reset to 0 GB!");
-          closeModal("modal-key-settings");
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
-    }
-
-    async function keySettingsSimulate() {
-      try {
-        const res = await fetch(`/api/keys/${activeSettingKeyId}/simulate-traffic`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ added_mb: 1024 })
-        });
-        if (res.ok) {
-          showToast("+1 GB simulated traffic added!");
-          closeModal("modal-key-settings");
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
-    }
-
-    async function keySettingsExtend() {
-      try {
-        const res = await fetch(`/api/keys/${activeSettingKeyId}/extend`, { method: "POST" });
-        if (res.ok) {
-          showToast("Extended 30 days!");
-          closeModal("modal-key-settings");
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
-    }
-
-    async function keySettingsDelete() {
-      if (!confirm(`Are you sure you want to delete "${activeSettingKeyName}"?`)) return;
-      try {
-        const res = await fetch(`/api/keys/${activeSettingKeyId}`, { method: "DELETE" });
-        if (res.ok) {
-          showToast("Key deleted!");
-          closeModal("modal-key-settings");
-          setTimeout(() => location.reload(), 300);
-        }
-      } catch (err) {}
     }
 
     async function submitServerSettings(e) {
@@ -1572,6 +1472,47 @@
       } catch (err) {
         showToast("Optimization triggered!");
       }
+    }
+
+    function setKeyFilter(status) {
+      currentFilterStatus = status;
+      const btnAll = document.getElementById("btn-filter-all");
+      const btnActive = document.getElementById("btn-filter-active");
+      const btnExpired = document.getElementById("btn-filter-expired");
+
+      btnAll.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-app-card transition border border-app-border";
+      btnActive.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-app-card transition border border-app-border";
+      btnExpired.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white bg-app-card transition border border-app-border";
+
+      if (status === 'all') {
+        btnAll.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white transition shadow-sm";
+      } else if (status === 'active') {
+        btnActive.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white transition shadow-sm";
+      } else if (status === 'expired') {
+        btnExpired.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-600 text-white transition shadow-sm";
+      }
+
+      filterKeys();
+    }
+
+    function filterKeys() {
+      const q = document.getElementById("filter-keys-input").value.toLowerCase();
+      const rows = document.querySelectorAll(".key-row");
+
+      rows.forEach(row => {
+        const name = row.getAttribute("data-name") || "";
+        const port = row.getAttribute("data-port") || "";
+        const status = row.getAttribute("data-status") || "";
+
+        const matchesQuery = name.includes(q) || port.includes(q);
+        const matchesStatus = (currentFilterStatus === 'all') || (status === currentFilterStatus);
+
+        if (matchesQuery && matchesStatus) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
     }
   </script>
 </body>
