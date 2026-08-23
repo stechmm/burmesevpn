@@ -20,8 +20,8 @@
       "status": "active",
       "status_text": "\u1021\u101e\u102f\u1036\u1038\u1015\u103c\u102f\u1014\u102d\u102f\u1004\u103a\u101e\u100a\u103a (Active)",
       "used_readable": "5.32 GB",
-      "limit_readable": "35.0 GB",
-      "usage_percent": 15.2,
+      "limit_readable": "50.0 GB",
+      "usage_percent": 10.6,
       "time_left_readable": "29d 23h remaining",
       "access_url": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNToxdkp4bzljb3J4TEdaQm42RkIzM0xRQDEyNy4wLjAuMTo4Mzg4#User_A_-_Android_VIP"
     },

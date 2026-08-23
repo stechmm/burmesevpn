@@ -6,18 +6,34 @@ import base64
 import secrets
 from typing import Dict, List, Optional
 
+WG_INTERFACE = os.environ.get("WG_INTERFACE", "wg-burmese")
 CONFIG_DIR = os.environ.get("WG_CONFIG_DIR", "/etc/wireguard")
-CONFIG_FILE = os.path.join(CONFIG_DIR, "wg0.conf")
+CONFIG_FILE = os.path.join(CONFIG_DIR, f"{WG_INTERFACE}.conf")
 DATA_FILE = os.environ.get("WG_DATA_FILE", os.path.join(os.path.dirname(__file__), "vpn_data.json"))
 
 class WireGuardManager:
-    def __init__(self, interface: str = "wg0", server_ip_range: str = "10.8.0.0/24", server_port: int = 51820):
+    def __init__(self, interface: str = WG_INTERFACE, server_ip_range: str = "10.66.0.0/24", server_port: int = 51820):
         self.interface = interface
         self.server_ip_range = ipaddress.IPv4Network(server_ip_range, strict=False)
-        self.server_port = server_port
-        self.server_vpn_ip = str(list(self.server_ip_range.hosts())[0])  # e.g., 10.8.0.1
+        self.server_port = int(os.environ.get("WG_PORT", server_port))
+        self.server_vpn_ip = str(list(self.server_ip_range.hosts())[0])  # e.g., 10.66.0.1
         self.data_file = DATA_FILE
         self._ensure_initialized()
+        self._auto_start_if_linux()
+
+    def _auto_start_if_linux(self):
+        """Auto-start WireGuard interface on Linux without requiring manual commands"""
+        if os.name == 'nt':
+            return
+        try:
+            # Check if interface is already up
+            out = subprocess.run(["ip", "link", "show", self.interface], capture_output=True, text=True)
+            if out.returncode != 0:
+                # Interface not up, start via wg-quick
+                if os.path.exists(CONFIG_FILE):
+                    subprocess.run(["wg-quick", "up", CONFIG_FILE], capture_output=True, text=True)
+        except Exception:
+            pass
 
     def _generate_keys_native(self):
         """Generate WireGuard Curve25519 private/public key pair using wg command if available, or fallback."""
@@ -179,9 +195,9 @@ class WireGuardManager:
             f"ListenPort = {server.get('listen_port', 51820)}",
             f"PrivateKey = {server.get('private_key', '')}",
             "SaveConfig = false",
-            "# Firewall NAT rules for forwarding internet traffic",
-            "PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE",
-            "PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE",
+            "# Non-destructive firewall NAT rules that coexist cleanly with other VPNs",
+            f"PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -s {self.server_ip_range} -j MASQUERADE",
+            f"PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -s {self.server_ip_range} -j MASQUERADE",
             ""
         ]
 

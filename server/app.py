@@ -1,15 +1,17 @@
 import os
 import io
 import json
+import base64
 import jinja2
-from fastapi import FastAPI, Request, Form, HTTPException, Depends
-from fastapi.responses import HTMLResponse, PlainTextResponse, Response, JSONResponse, FileResponse
+from fastapi import FastAPI, Request, Form, HTTPException, Depends, status
+from fastapi.responses import HTMLResponse, PlainTextResponse, Response, JSONResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional
 
 from wg_manager import WireGuardManager
 from key_manager import AccessKeyManager
+from auth import AuthManager
 
 app = FastAPI(title="Burmese VPN - Dual-Engine Hub")
 
@@ -24,6 +26,26 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATES_DIR))
 
 wg_manager = WireGuardManager()
 key_manager = AccessKeyManager()
+auth_manager = AuthManager()
+
+# ================= Auth Dependency =================
+
+def is_authenticated(request: Request) -> bool:
+    session_token = request.cookies.get("session_token")
+    if not session_token:
+        # Also check Authorization header Bearer token
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            session_token = auth_header.split(" ")[1]
+    return auth_manager.validate_session(session_token)
+
+async def require_admin_api(request: Request):
+    if not is_authenticated(request):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized: Please sign in as admin"
+        )
+    return True
 
 # ================= Data Models =================
 
@@ -48,14 +70,55 @@ class ServerSettingsRequest(BaseModel):
     endpoint: str
     dns: str = "1.1.1.1, 8.8.8.8"
     mtu: int = 1420
+    admin_password: Optional[str] = None
 
 class TrafficSimulateRequest(BaseModel):
     added_mb: float = 500.0
+
+# ================= Authentication Routes =================
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request, error: Optional[str] = None):
+    if is_authenticated(request):
+        return RedirectResponse(url="/", status_code=302)
+    template = jinja_env.get_template("login.html")
+    return HTMLResponse(content=template.render(error=error))
+
+@app.post("/login")
+async def login_action(username: str = Form(...), password: str = Form(...)):
+    token = auth_manager.authenticate(username, password)
+    if not token:
+        template = jinja_env.get_template("login.html")
+        return HTMLResponse(
+            content=template.render(error="Invalid username or password! Default is admin / password"),
+            status_code=400
+        )
+    response = RedirectResponse(url="/", status_code=303)
+    response.set_cookie(
+        key="session_token",
+        value=token,
+        httponly=True,
+        max_age=60*60*24*30, # 30 days
+        samesite="lax"
+    )
+    return response
+
+@app.get("/logout")
+async def logout_action(request: Request):
+    session_token = request.cookies.get("session_token")
+    if session_token:
+        auth_manager.revoke_session(session_token)
+    response = RedirectResponse(url="/login", status_code=302)
+    response.delete_cookie("session_token")
+    return response
 
 # ================= Web Dashboard Route =================
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
+    if not is_authenticated(request):
+        return RedirectResponse(url="/login", status_code=302)
+
     server_info = wg_manager.get_server_info()
     router_clients = wg_manager.get_clients()
     mobile_keys = key_manager.get_all_keys()
@@ -74,11 +137,11 @@ async def index(request: Request):
 # ================= Part 1: Router API Routes =================
 
 @app.get("/api/routers")
-async def api_get_routers():
+async def api_get_routers(auth=Depends(require_admin_api)):
     return wg_manager.get_clients()
 
 @app.post("/api/routers")
-async def api_add_router(data: RouterClientCreateRequest):
+async def api_add_router(data: RouterClientCreateRequest, auth=Depends(require_admin_api)):
     if not data.name or not data.name.strip():
         raise HTTPException(status_code=400, detail="Router name is required")
     try:
@@ -92,10 +155,11 @@ async def api_add_router(data: RouterClientCreateRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.delete("/api/routers/{client_id}")
-async def api_delete_router(client_id: str):
+async def api_delete_router(client_id: str, auth=Depends(require_admin_api)):
     wg_manager.delete_client(client_id)
-    return {"success": True, "message": "Router profile deleted"}
+    return {"success": True, "message": "Router gateway removed"}
 
+# Router script generators (Public for 1-click execution or tokenized access)
 @app.get("/api/routers/{client_id}/openwrt")
 async def api_get_openwrt(client_id: str):
     script = wg_manager.generate_openwrt_script(client_id)
@@ -152,18 +216,18 @@ async def api_get_router_conf(client_id: str):
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
 
-# ================= Part 2: Mobile Access Key API Routes =================
+# ================= Part 2: Mobile Access Key Routes =================
 
 @app.get("/api/keys")
-async def api_get_keys():
+async def api_get_keys(auth=Depends(require_admin_api)):
     return key_manager.get_all_keys()
 
 @app.post("/api/keys")
-async def api_create_key(data: MobileKeyCreateRequest):
+async def api_create_key(data: MobileKeyCreateRequest, auth=Depends(require_admin_api)):
     if not data.name or not data.name.strip():
         raise HTTPException(status_code=400, detail="Key/User name is required")
     try:
-        new_key = key_manager.create_access_key(
+        new_key = key_manager.create_key(
             name=data.name.strip(),
             data_limit_gb=data.data_limit_gb,
             expire_days=data.expire_days,
@@ -174,7 +238,7 @@ async def api_create_key(data: MobileKeyCreateRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/api/keys/{key_id}/update")
-async def api_update_key(key_id: str, data: MobileKeyUpdateRequest):
+async def api_update_key(key_id: str, data: MobileKeyUpdateRequest, auth=Depends(require_admin_api)):
     updated = key_manager.update_key(
         key_id=key_id,
         name=data.name,
@@ -187,34 +251,33 @@ async def api_update_key(key_id: str, data: MobileKeyUpdateRequest):
     return {"success": True, "key": updated}
 
 @app.delete("/api/keys/{key_id}")
-async def api_delete_key(key_id: str):
+async def api_delete_key(key_id: str, auth=Depends(require_admin_api)):
     key_manager.delete_key(key_id)
     return {"success": True, "message": "Key deleted"}
 
 @app.post("/api/keys/{key_id}/toggle")
-async def api_toggle_key(key_id: str):
+async def api_toggle_key(key_id: str, auth=Depends(require_admin_api)):
     is_enabled = key_manager.toggle_key(key_id)
     return {"success": True, "enabled": is_enabled}
 
 @app.post("/api/keys/{key_id}/reset-usage")
-async def api_reset_key_usage(key_id: str):
+async def api_reset_key_usage(key_id: str, auth=Depends(require_admin_api)):
     key_manager.reset_data_usage(key_id)
     return {"success": True, "message": "Data usage reset to 0 GB"}
 
 @app.post("/api/keys/{key_id}/extend")
-async def api_extend_key_expiry(key_id: str):
+async def api_extend_key_expiry(key_id: str, auth=Depends(require_admin_api)):
     key_manager.extend_expiry(key_id, extra_days=30)
     return {"success": True, "message": "Extended 30 days"}
 
 @app.post("/api/keys/{key_id}/simulate-traffic")
-async def api_simulate_traffic(key_id: str, data: TrafficSimulateRequest):
+async def api_simulate_traffic(key_id: str, data: TrafficSimulateRequest, auth=Depends(require_admin_api)):
     key_manager.simulate_add_traffic(key_id, data.added_mb)
     return {"success": True, "message": f"Added {data.added_mb} MB traffic"}
 
 # Subscription link endpoint for mobile apps (v2rayNG, Shadowrocket, Sing-box, Clash, Outline)
 @app.get("/sub/{key_id}")
 async def api_get_subscription(key_id: str):
-    import base64
     keys = key_manager.get_all_keys()
     key = next((k for k in keys if k["id"] == key_id), None)
     if not key:
@@ -225,7 +288,6 @@ async def api_get_subscription(key_id: str):
     limit_bytes = int(key.get("data_limit_gb", 0) * 1024 * 1024 * 1024)
     expire_timestamp = int(key.get("expire_timestamp", 0))
     
-    # Base64 encoded format for v2rayNG / Sing-box / Shadowrocket
     b64_content = base64.b64encode(access_url.encode('utf-8')).decode('utf-8')
     
     headers = {
@@ -236,7 +298,7 @@ async def api_get_subscription(key_id: str):
     return Response(content=b64_content, media_type="text/plain; charset=utf-8", headers=headers)
 
 @app.get("/api/keys/export")
-async def api_export_keys():
+async def api_export_keys(auth=Depends(require_admin_api)):
     keys = key_manager.get_all_keys()
     active_urls = [k["access_url"] for k in keys if k.get("status") == "active" and k.get("access_url")]
     content = "\n".join(active_urls)
@@ -247,7 +309,7 @@ async def api_export_keys():
     )
 
 @app.get("/api/status")
-async def api_get_live_status():
+async def api_get_live_status(auth=Depends(require_admin_api)):
     server_info = wg_manager.get_server_info()
     router_clients = wg_manager.get_clients()
     mobile_keys = key_manager.get_all_keys()
@@ -263,7 +325,7 @@ async def api_get_live_status():
 # ================= General Server Settings =================
 
 @app.post("/api/server/settings")
-async def api_update_settings(data: ServerSettingsRequest):
+async def api_update_settings(data: ServerSettingsRequest, auth=Depends(require_admin_api)):
     endpoint = data.endpoint.strip()
     wg_manager.update_server_endpoint(
         endpoint=endpoint,
@@ -271,6 +333,8 @@ async def api_update_settings(data: ServerSettingsRequest):
         mtu=data.mtu
     )
     key_manager.update_server_host(endpoint)
+    if data.admin_password and data.admin_password.strip():
+        auth_manager.update_credentials("admin", data.admin_password.strip())
     return {"success": True}
 
 if __name__ == "__main__":

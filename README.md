@@ -50,6 +50,8 @@
 
 ## 🚀 VPS ပေါ်တွင် ၁ ချက်နှိပ် တင်ဆင်နည်း (1-Click Linux VPS Deployment)
 
+တခြား VPN များ (OpenVPN, Xray, 3x-ui, Tailscale, Sing-box) run ထားသော Multi-VPN Server ပေါ်တွင်လည်း Port/Interface မတိုက်ဘဲ အလိုအလျောက် သီးသန့် အလုပ်လုပ်နိုင်အောင် ပြင်ဆင်ထားပါသည်။
+
 Ubuntu / Debian VPS တစ်လုံး (Singapore, Tokyo, US စသည်) တွင် root ဖြင့် အောက်ပါ command ကို run လိုက်ပါ:
 
 ```bash
@@ -59,7 +61,10 @@ sudo bash install.sh
 ```
 
 တပ်ဆင်မှု ပြီးဆုံးပါက Web Dashboard URL ပေါ်လာပါမည်:
-👉 `http://<YOUR_VPS_IP>:8080`
+👉 **URL:** `http://<YOUR_VPS_IP>:8080`
+- 🔑 **Default Username:** `admin`
+- 🔒 **Default Password:** `password`
+*(Dashboard Settings Modal ထဲတွင် စကားဝှက်ကို ချက်ချင်း ပြောင်းလဲနိုင်ပါသည်)*
 
 ---
 

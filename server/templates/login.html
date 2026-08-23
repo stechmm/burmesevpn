@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="my" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Burmese VPN - Admin Login</title>
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Padauk:wght@400;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', 'Padauk', sans-serif;
+      background-color: #0c1017;
+      color: #f1f5f9;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 selection:bg-blue-600 selection:text-white antialiased">
+
+  <div class="w-full max-w-md space-y-6">
+    
+    <!-- Brand Header -->
+    <div class="text-center space-y-2">
+      <div class="inline-flex w-14 h-14 rounded-2xl bg-blue-600 items-center justify-center shadow-lg shadow-blue-600/20 mb-2">
+        <i data-lucide="shield-check" class="w-7 h-7 text-white"></i>
+      </div>
+      <h1 class="text-xl font-black text-white tracking-tight">Burmese VPN</h1>
+      <p class="text-xs text-slate-400">Dual-Engine Enterprise Management Portal</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="bg-[#151d2a] border border-[#243144] rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+      
+      <div class="border-b border-[#243144] pb-4">
+        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="lock" class="w-4 h-4 text-blue-400"></i>
+          <span>Administrator Sign In</span>
+        </h2>
+        <p class="text-[11px] text-slate-400 mt-1">ဆာဗာအား စီမံခန့်ခွဲရန် လော့ဂ်အင် ဝင်ရောက်ပါ</p>
+      </div>
+
+      {% if error %}
+      <div class="p-3 rounded-lg bg-rose-950/80 border border-rose-700/60 text-rose-300 text-xs font-semibold flex items-center gap-2">
+        <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
+        <span>{{ error }}</span>
+      </div>
+      {% endif %}
+
+      <form action="/login" method="POST" class="space-y-4">
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">Username (အသုံးပြုသူအမည်)</label>
+          <div class="relative">
+            <i data-lucide="user" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="text" name="username" required value="admin" class="w-full pl-10 pr-3.5 py-2.5 rounded-lg bg-[#0c1017] border border-[#243144] text-white text-xs focus:border-blue-500 focus:outline-none transition">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">Password (စကားဝှက်)</label>
+          <div class="relative">
+            <i data-lucide="key" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="password" name="password" required value="password" class="w-full pl-10 pr-3.5 py-2.5 rounded-lg bg-[#0c1017] border border-[#243144] text-white text-xs focus:border-blue-500 focus:outline-none transition">
+          </div>
+        </div>
+
+        <div class="p-2.5 rounded-lg bg-[#192231] border border-[#243144] text-[11px] text-slate-400 flex items-center justify-between">
+          <span>Default Credentials:</span>
+          <span class="font-mono text-blue-300 font-bold">admin / password</span>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md transition flex items-center justify-center gap-2 active:scale-95">
+          <span>Sign In to Dashboard</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+
+      </form>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-[11px] text-slate-500">
+      🇲🇲 Burmese VPN Dual-Engine Hub • Protected Access
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
