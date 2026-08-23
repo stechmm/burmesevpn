@@ -118,7 +118,32 @@
       "active_device_ips": [],
       "enabled": true,
       "status": "active",
-      "access_url": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTp6NXVRb1V1QmprbjA5WllBRkdMVldnQDEyNy4wLjAuMTo4Mzky#Aung"
+      "access_url": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTp6NXVRb1V1QmprbjA5WllBRkdMVldnQDEyNy4wLjAuMTo4Mzky#Aung",
+      "status_text": "\u1021\u101e\u102f\u1036\u1038\u1015\u103c\u102f\u1014\u102d\u102f\u1004\u103a\u101e\u100a\u103a (Active)",
+      "used_readable": "0.0 MB",
+      "limit_readable": "50.0 GB",
+      "usage_percent": 0.0,
+      "time_left_readable": "29d 23h remaining"
+    },
+    {
+      "id": "1d199ac62003",
+      "name": "Aung",
+      "port": 8393,
+      "password": "dxtpLYT_YcJh7yq4sA7suA",
+      "cipher": "chacha20-ietf-poly1305",
+      "created_at": "2026-08-23 19:29:13",
+      "expire_days": 30,
+      "expire_date": "2026-09-22 19:29:13",
+      "expire_timestamp": 1790081953,
+      "data_limit_gb": 50.0,
+      "data_limit_bytes": 53687091200,
+      "used_bytes": 0,
+      "max_devices": 1,
+      "active_devices_count": 0,
+      "active_device_ips": [],
+      "enabled": true,
+      "status": "active",
+      "access_url": "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpkeHRwTFlUX1ljSmg3eXE0c0E3c3VBQDEyNy4wLjAuMTo4Mzkz#Aung"
     }
   ],
   "server_config": {

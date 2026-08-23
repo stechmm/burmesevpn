@@ -1118,16 +1118,26 @@
 
   <!-- ================= AI SERVER AGENT FLOATING BUTTON & DRAWER ================= -->
   
-  <!-- Floating Trigger Button -->
-  <div class="fixed bottom-6 right-6 z-40">
+  <!-- ================= AI SERVER AGENT FLOATING BUTTON & DRAWER ================= -->
+  
+  <!-- Floating Trigger Buttons (Voice + Drawer) -->
+  <div class="fixed bottom-6 right-6 z-40 flex items-center gap-2">
+    
+    <!-- Quick Voice Speak Button -->
+    <button onclick="startVoiceRecognition()" id="btn-quick-voice" class="group relative flex items-center gap-2 px-3.5 py-3 rounded-2xl bg-gradient-to-r from-rose-600 to-amber-600 text-white font-bold text-xs shadow-2xl shadow-rose-500/40 hover:shadow-rose-500/60 border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95" title="မြန်မာလို အသံဖြင့် တိုက်ရိုက်ခိုင်းစေရန် (Click to Speak in Burmese)">
+      <i data-lucide="mic" class="w-4 h-4 text-white animate-pulse"></i>
+      <span class="hidden sm:inline">🎙️ ပြောပြီးခိုင်းမယ်</span>
+    </button>
+
+    <!-- Main Agent Drawer Trigger -->
     <button onclick="toggleAiDrawer()" class="group relative flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-bold text-xs shadow-2xl shadow-indigo-500/40 hover:shadow-indigo-500/60 border border-white/20 transition-all duration-300 hover:scale-105 active:scale-95">
       <span class="relative flex h-2.5 w-2.5">
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
         <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
       </span>
-      <i data-lucide="bot" class="w-5 h-5 text-white animate-bounce"></i>
-      <span>🤖 AI Server Agent</span>
-      <span class="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-black/30 border border-white/10">Copilot</span>
+      <i data-lucide="bot" class="w-5 h-5 text-white"></i>
+      <span>🤖 AI Copilot</span>
+      <span class="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-black/30 border border-white/10">Voice</span>
     </button>
   </div>
 
@@ -1142,10 +1152,10 @@
         </div>
         <div>
           <h3 class="font-extrabold text-white text-sm flex items-center gap-1.5">
-            <span>AI Server Copilot</span>
-            <span class="text-[9px] font-black px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 uppercase">Active</span>
+            <span>Voice & Text AI Copilot</span>
+            <span class="text-[9px] font-black px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 uppercase">Voice Ready</span>
           </h3>
-          <p class="text-[11px] text-slate-400">Prompt ဖြင့် ဆာဗာတစ်ခုလုံးအား ထိန်းချုပ်မည့် AI Agent</p>
+          <p class="text-[11px] text-slate-400">မြန်မာလို အသံဖြင့်ပြော၍ ဆာဗာအား ထိန်းချုပ်မည့် AI Agent</p>
         </div>
       </div>
 
@@ -1154,12 +1164,27 @@
       </button>
     </div>
 
+    <!-- Voice Recording Banner (Live Listening Mode) -->
+    <div id="ai-voice-status-bar" class="p-3 bg-gradient-to-r from-rose-950/60 via-purple-950/60 to-indigo-950/60 border-b border-rose-800/40 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 text-xs">
+        <span class="relative flex h-3 w-3">
+          <span id="voice-ping" class="hidden animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+          <span id="voice-dot" class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+        </span>
+        <span id="voice-status-text" class="text-rose-200 font-bold">🎙️ မိုက်ခရိုဖုန်းကို နှိပ်ပြီး မြန်မာလို ပြောပါ</span>
+      </div>
+      <button onclick="toggleVoiceRecognition()" id="btn-voice-toggle" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center gap-1.5 transition active:scale-95 shadow-md shadow-rose-600/30">
+        <i data-lucide="mic" class="w-3.5 h-3.5"></i>
+        <span id="btn-voice-label">စပြောမည်</span>
+      </button>
+    </div>
+
     <!-- Quick Prompt Chips -->
     <div class="p-3 border-b border-app-border bg-app-bg/50 flex items-center gap-1.5 overflow-x-auto custom-scroll text-[11px]">
       <button onclick="useQuickPrompt('Server memory ရှင်းပြီး optimize လုပ်ပေးပါ')" class="px-2.5 py-1 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white border border-app-border whitespace-nowrap transition">
         ⚡ Optimize Memory
       </button>
-      <button onclick="useQuickPrompt('Mg Mg အတွက် 30GB 1 လ သက်တမ်း key တစ်ခု ထုတ်ပေးပါ')" class="px-2.5 py-1 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white border border-app-border whitespace-nowrap transition">
+      <button onclick="useQuickPrompt('Aung Aung အတွက် 30GB 1 လ သက်တမ်း key တစ်ခု ထုတ်ပေးပါ')" class="px-2.5 py-1 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white border border-app-border whitespace-nowrap transition">
         📱 Create 30GB Key
       </button>
       <button onclick="useQuickPrompt('Firewall port 8080 နဲ့ 80 ဖွင့်ပေးပါ')" class="px-2.5 py-1 rounded-lg bg-app-card hover:bg-app-cardHover text-slate-300 hover:text-white border border-app-border whitespace-nowrap transition">
@@ -1182,25 +1207,30 @@
           <i data-lucide="bot" class="w-4 h-4"></i>
         </div>
         <div class="p-3.5 rounded-2xl bg-app-card border border-app-border text-slate-200 space-y-2 leading-relaxed max-w-[85%]">
-          <p class="font-bold text-white">🇲🇲 မင်္ဂလာပါ! Burmese VPN AI Server Agent မှ ကြိုဆိုပါတယ်။</p>
-          <p class="text-[11px] text-slate-400">ဆာဗာနှင့် ပတ်သက်သမျှ (Key ထုတ်ခြင်း၊ Port ဖွင့်ခြင်း၊ Router ထည့်ခြင်း၊ Memory ရှင်းခြင်း) အားလုံးကို အောက်တွင် စာရိုက်၍ တိုက်ရိုက် ခိုင်းစေနိုင်ပါသည်ခင်ဗျာ။</p>
+          <p class="font-bold text-white">🇲🇲 မင်္ဂလာပါ! Burmese VPN Voice AI Agent မှ ကြိုဆိုပါတယ်။</p>
+          <p class="text-[11px] text-slate-400">မိုက်ခရိုဖုန်းခလုတ် (🎙️) ကို နှိပ်ပြီး မြန်မာလို အသံဖြင့် တိုက်ရိုက် ပြောဆိုခိုင်းစေနိုင်ပါသည်ခင်ဗျာ။ (ဥပမာ - <em>"မောင်မောင်အတွက် 50GB key တစ်ခု ထုတ်ပေး"</em> သို့မဟုတ် <em>"ဆာဗာ memory ရှင်းပေး"</em>)။</p>
         </div>
       </div>
 
     </div>
 
-    <!-- Chat Input Box -->
+    <!-- Chat Input Box with Mic Icon -->
     <div class="p-3 sm:p-4 border-t border-app-border bg-app-surface">
       <form id="form-ai-chat" onsubmit="submitAiChat(event)" class="relative flex items-center gap-2">
-        <input type="text" id="ai-chat-input" required placeholder="ခိုင်းစေလိုသည်ကို မြန်မာလို (သို့) English ရိုက်ထည့်ပါ..." class="w-full pl-4 pr-12 py-3 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-indigo-500 focus:outline-none transition placeholder:text-slate-500 shadow-inner">
+        <input type="text" id="ai-chat-input" required placeholder="မြန်မာလို အသံဖြင့်ပြောပါ (သို့) စာရိုက်ထည့်ပါ..." class="w-full pl-4 pr-20 py-3 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-indigo-500 focus:outline-none transition placeholder:text-slate-500 shadow-inner">
         
-        <button type="submit" id="btn-ai-send" class="absolute right-2 p-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition active:scale-95 shadow-md shadow-indigo-600/30">
-          <i data-lucide="send" class="w-4 h-4"></i>
-        </button>
+        <div class="absolute right-2 flex items-center gap-1">
+          <button type="button" onclick="toggleVoiceRecognition()" id="btn-input-mic" class="p-2 rounded-lg bg-app-card hover:bg-rose-600 text-rose-400 hover:text-white border border-app-border transition" title="Speak in Burmese">
+            <i data-lucide="mic" class="w-4 h-4"></i>
+          </button>
+          <button type="submit" id="btn-ai-send" class="p-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition active:scale-95 shadow-md shadow-indigo-600/30">
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </button>
+        </div>
       </form>
       <div class="mt-2 flex items-center justify-between text-[10px] text-slate-500 px-1">
-        <span>Press <kbd class="px-1.5 py-0.5 rounded bg-app-card border border-app-border text-slate-400">Enter</kbd> to execute action</span>
-        <span>⚡ Real-time Server Execution</span>
+        <span>🎙️ Web Speech AI Engine Active</span>
+        <span>⚡ Real-time Burmese Voice Execution</span>
       </div>
     </div>
 
@@ -1734,6 +1764,105 @@
     function removeLoadingMessage(id) {
       const el = document.getElementById(id);
       if (el) el.remove();
+    }
+
+    // ================= VOICE SPEECH RECOGNITION (BURMESE & ENGLISH) =================
+    let recognition = null;
+    let isListening = false;
+
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        return null;
+      }
+      const rec = new SpeechRecognition();
+      rec.continuous = false;
+      rec.interimResults = true;
+      rec.lang = "my-MM"; // Default to Myanmar, falls back to browser standard
+
+      rec.onstart = () => {
+        isListening = true;
+        updateVoiceUiState(true);
+      };
+
+      rec.onresult = (event) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          transcript += event.results[i][0].transcript;
+        }
+        document.getElementById("ai-chat-input").value = transcript;
+        document.getElementById("voice-status-text").innerText = `🎙️ "${transcript}"`;
+      };
+
+      rec.onerror = (event) => {
+        isListening = false;
+        updateVoiceUiState(false);
+        if (event.error !== 'no-speech') {
+          showToast("Microphone error: " + event.error);
+        }
+      };
+
+      rec.onend = () => {
+        isListening = false;
+        updateVoiceUiState(false);
+        const transcript = document.getElementById("ai-chat-input").value.trim();
+        if (transcript) {
+          document.getElementById("form-ai-chat").dispatchEvent(new Event("submit"));
+        }
+      };
+
+      return rec;
+    }
+
+    function updateVoiceUiState(listening) {
+      const ping = document.getElementById("voice-ping");
+      const dot = document.getElementById("voice-dot");
+      const text = document.getElementById("voice-status-text");
+      const label = document.getElementById("btn-voice-label");
+      const micBtn = document.getElementById("btn-input-mic");
+
+      if (listening) {
+        if (ping) ping.classList.remove("hidden");
+        if (dot) dot.className = "relative inline-flex rounded-full h-3 w-3 bg-rose-400";
+        if (text) text.innerText = "🎙️ နားထောင်နေပါသည်... မြန်မာလို ပြောပါ (Listening...)";
+        if (label) label.innerText = "ရပ်မည်";
+        if (micBtn) micBtn.className = "p-2 rounded-lg bg-rose-600 text-white animate-pulse transition";
+      } else {
+        if (ping) ping.classList.add("hidden");
+        if (dot) dot.className = "relative inline-flex rounded-full h-3 w-3 bg-rose-500";
+        if (text) text.innerText = "🎙️ မိုက်ခရိုဖုန်းကို နှိပ်ပြီး မြန်မာလို ပြောပါ";
+        if (label) label.innerText = "စပြောမည်";
+        if (micBtn) micBtn.className = "p-2 rounded-lg bg-app-card hover:bg-rose-600 text-rose-400 hover:text-white border border-app-border transition";
+      }
+    }
+
+    function toggleVoiceRecognition() {
+      if (!recognition) {
+        recognition = initSpeechRecognition();
+      }
+      if (!recognition) {
+        alert("Your browser does not support Web Speech Recognition. Please use Google Chrome, Edge, or Safari.");
+        return;
+      }
+
+      if (isListening) {
+        recognition.stop();
+      } else {
+        try {
+          recognition.start();
+        } catch (err) {
+          recognition.stop();
+        }
+      }
+    }
+
+    function startVoiceRecognition() {
+      if (!isAiDrawerOpen) {
+        toggleAiDrawer();
+      }
+      setTimeout(() => {
+        toggleVoiceRecognition();
+      }, 300);
     }
 
     function escapeHtml(str) {
