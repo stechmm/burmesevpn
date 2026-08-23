@@ -99,14 +99,21 @@ def test_all():
     # 10. Test PC Desktop Clash Profile Generator
     clash_res = opener.open(f'{BASE}/api/keys/{first_key["id"]}/clash').read().decode('utf-8')
     assert 'Burmese VPN' in clash_res and 'proxies:' in clash_res and 'type: ss' in clash_res
-    print("[PASS] 10/11 PC Desktop Clash / Clash Verge Profile Generator: 200 OK")
+    print("[PASS] 10/12 PC Desktop Clash / Clash Verge Profile Generator: 200 OK")
 
-    # 11. Test Logout Action
+    # 11. Test Autonomous AI Server Agent Prompts (Burmese NLP Execution)
+    ai_prompt_payload = json.dumps({"prompt": "Aung Aung အတွက် 50GB 1 လ သက်တမ်း key တစ်ခု ထုတ်ပေးပါ"}).encode('utf-8')
+    ai_req = urllib.request.Request(f'{BASE}/api/ai/chat', data=ai_prompt_payload, headers={'Content-Type': 'application/json'})
+    ai_res = json.loads(opener.open(ai_req).read().decode('utf-8'))
+    assert ai_res.get('success') is True and ai_res.get('action') == 'CREATE_KEY'
+    print(f"[PASS] 11/12 Autonomous AI Server Agent (Burmese Prompt Provisioning): 200 OK")
+
+    # 12. Test Logout Action
     logout_res = opener.open(f'{BASE}/logout')
     assert '/login' in logout_res.geturl() or logout_res.status == 200
-    print("[PASS] 11/11 Logout & Session Revocation: 200 OK")
+    print("[PASS] 12/12 Logout & Session Revocation: 200 OK")
 
-    print("[SUCCESS] All 11/11 PC Desktop, Multi-Node, High-Load & Auth Tests Passed Successfully!")
+    print("[SUCCESS] All 12/12 AI Server Agent, PC Desktop, Multi-Node, High-Load & Auth Tests Passed Successfully!")
 
 if __name__ == '__main__':
     test_all()

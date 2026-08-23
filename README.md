@@ -65,6 +65,15 @@
 - 🚀 **Clash Verge / v2rayN Profile**: Dashboard ရှိ `🖥️ PC Setup` မှတစ်ဆင့် နိုင်ငံစုံ Node (SG/JP/US/DE) ပါဝင်သော `burmesevpn_clash.yaml` ကို download လုပ်ပြီး Auto-Ping ရွေးချယ် အသုံးပြုနိုင်ခြင်း။
 - 🛡️ **WireGuard PC Client**: Native WireGuard `.conf` ဖြင့် Windows/Mac ပေါ်တွင် Kernel-Level Speed ဖြင့် အသုံးပြုနိုင်ခြင်း။
 
+### 6. 🤖 Autonomous AI Server Agent (Prompt-Based Server Copilot)
+- 🇲🇲 **Natural Language Prompting (Burmese & English)**: Command လိုင်းများ ရိုက်ထည့်စရာမလိုဘဲ စာသားဖြင့် ခိုင်းစေရုံဖြင့် Server Administration အားလုံးကို အလိုအလျောက် လုပ်ဆောင်ပေးခြင်း။
+- ⚡ **Auto-Executed Actions**:
+  - `Mg Mg အတွက် 50GB 1 လ သက်တမ်း key ထုတ်ပေးပါ` -> Key ချက်ချင်းထုတ်ပေးခြင်း။
+  - `Firewall port 8080 ဖွင့်ပေးပါ` -> iptables & UFW rule အလိုအလျောက် ဖွင့်ခြင်း။
+  - `Server memory ရှင်းပြီး optimize လုပ်ပေးပါ` -> RAM Flush & Garbage Collection ပြုလုပ်ခြင်း။
+  - `Home-Router ဆိုတဲ့ OpenWrt Gateway ထည့်ပေးပါ` -> Router Profile အလိုအလျောက် တည်ဆောက်ခြင်း။
+  - `Server ကျန်းမာရေး စစ်ဆေးပြပါ` -> Real-time CPU, RAM, Network Metrics Diagnostic အစီရင်ခံခြင်း။
+
 ---
 
 ## 🚀 VPS ပေါ်တွင် ၁ ချက်နှိပ် တင်ဆင်နည်း (1-Click Linux VPS Deployment)

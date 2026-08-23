@@ -15,6 +15,7 @@ from key_manager import AccessKeyManager
 from node_manager import NodeManager
 from auth import AuthManager
 from watchdog import watchdog_engine
+from ai_agent import AIServerAgent
 
 app = FastAPI(title="Burmese VPN - Dual-Engine Hub")
 app.add_middleware(GZipMiddleware, minimum_size=500)
@@ -32,6 +33,10 @@ wg_manager = WireGuardManager()
 key_manager = AccessKeyManager()
 node_manager = NodeManager()
 auth_manager = AuthManager()
+ai_server_agent = AIServerAgent(wg_manager, key_manager, node_manager, watchdog_engine)
+
+class AIChatRequest(BaseModel):
+    prompt: str
 
 # ================= High-Load Rate Limiter =================
 RATE_LIMIT_STORE: Dict[str, list] = {}
@@ -540,6 +545,15 @@ async def api_update_settings(data: ServerSettingsRequest, auth=Depends(require_
     if data.admin_password and data.admin_password.strip():
         auth_manager.update_credentials("admin", data.admin_password.strip())
     return {"success": True}
+
+# ================= Autonomous AI Server Agent Routes =================
+
+@app.post("/api/ai/chat")
+async def api_ai_chat(data: AIChatRequest, auth=Depends(require_admin_api)):
+    if not data.prompt or not data.prompt.strip():
+        raise HTTPException(status_code=400, detail="Prompt is required")
+    result = ai_server_agent.process_prompt(data.prompt.strip())
+    return result
 
 if __name__ == "__main__":
     import uvicorn

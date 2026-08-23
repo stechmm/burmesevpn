@@ -107,9 +107,16 @@ class AccessKeyManager:
             "status": "active" # active, expired, quota_exceeded, disabled
         }
 
+        server_host = data.get("server_config", {}).get("host", self.default_server_host)
+        user_info = f"{key_entry['cipher']}:{key_entry['password']}@{server_host}:{key_entry['port']}"
+        encoded_user_info = base64.b64encode(user_info.encode('utf-8')).decode('utf-8')
+        key_entry["access_url"] = f"ss://{encoded_user_info}#{key_entry['name']}"
+
         data["keys"].append(key_entry)
         self._save_data(data)
         return key_entry
+
+    create_key = create_access_key
 
     def get_all_keys(self) -> List[dict]:
         """Evaluates auto-expiration and quota limits and returns live statuses"""
