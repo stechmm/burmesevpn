@@ -1,6 +1,6 @@
-# Lightweight WireGuard VPN Server & Multi-Router Management Hub 🛡️🚀
+# Burmese VPN 🇲🇲🛡️ - Dual-Engine Mobile & Router Hub
 
-Linux Server ပေါ်တွင် အလွန်ပေါ့ပါးမြန်ဆန်သည့် **WireGuard Protocol** ကို အခြေခံပြီး တည်ဆောက်ထားသော VPN Server နှင့် Multi-Router Management System ဖြစ်ပါသည်။
+Linux Server ပေါ်တွင် အလွန်ပေါ့ပါးမြန်ဆန်သည့် **WireGuard Protocol** နှင့် **Outline/Shadowsocks/V2Ray Protocol** ကို အခြေခံပြီး တည်ဆောက်ထားသော Dual-Engine VPN System ဖြစ်ပါသည်။
 
 မိုဘိုင်းဖုန်း၊ ကွန်ပျူတာများအပြင် **OpenWrt, MikroTik RouterOS v7, AsusWRT, GL.iNet** စသည့် Router များတွင် အိမ်သုံး/ရုံးသုံး Network Gateway အဖြစ် မိနစ်ပိုင်းအတွင်း တပ်ဆင်အသုံးပြုနိုင်ပါသည်။
 

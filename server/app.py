@@ -11,7 +11,7 @@ from typing import Optional
 from wg_manager import WireGuardManager
 from key_manager import AccessKeyManager
 
-app = FastAPI(title="Dual-Engine VPN & Router Hub")
+app = FastAPI(title="Burmese VPN - Dual-Engine Hub")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
