@@ -1,122 +1,92 @@
 <!DOCTYPE html>
-<html lang="my" class="dark">
+<html lang="my">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Burmese VPN — Admin Sign In</title>
-  
-  <!-- Tailwind CSS & Lucide Icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- Typography: Plus Jakarta Sans & Padauk -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Padauk:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', '"Padauk"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-          },
-          colors: {
-            app: {
-              bg: '#090d14',
-              surface: '#111722',
-              card: '#161f2e',
-              border: '#233044',
-              accent: '#3b82f6',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
-    body {
-      background-color: #090d14;
-      color: #f1f5f9;
-      -webkit-font-smoothing: antialiased;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Padauk", "Pyidaungsu"; }
+    body { background-color: #090d14; color: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .login-container { width: 100%; max-width: 420px; }
+    .brand-header { text-align: center; margin-bottom: 24px; }
+    .brand-icon { width: 64px; height: 64px; border-radius: 16px; background: linear-gradient(135deg, #3b82f6, #6366f1); display: inline-flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 12px; box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3); border: 1px solid rgba(255,255,255,0.2); }
+    .brand-title { font-size: 24px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
+    .brand-subtitle { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+    .login-card { background-color: #111722; border: 1px solid #233044; border-radius: 24px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    .card-header { border-bottom: 1px solid #233044; padding-bottom: 16px; margin-bottom: 20px; }
+    .card-title { font-size: 14px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 8px; }
+    .card-desc { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+    .error-box { background: rgba(225, 29, 72, 0.2); border: 1px solid rgba(225, 29, 72, 0.4); color: #fda4af; padding: 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 11px; font-weight: 700; color: #cbd5e1; margin-bottom: 6px; }
+    .input-wrapper { position: relative; }
+    .form-input { width: 100%; padding: 12px 14px; background: #090d14; border: 1px solid #233044; border-radius: 12px; color: #ffffff; font-size: 13px; outline: none; transition: border-color 0.2s; }
+    .form-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+    .info-box { background: #090d14; border: 1px solid #233044; border-radius: 12px; padding: 10px 14px; font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .info-badge { font-family: monospace; color: #60a5fa; font-weight: 700; font-size: 12px; }
+    .btn-submit { width: 100%; padding: 14px; background: #2563eb; color: #ffffff; border: none; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-submit:hover { background: #1d4ed8; }
+    .btn-submit:active { transform: scale(0.98); }
+    .footer-text { text-align: center; font-size: 11px; color: #64748b; margin-top: 24px; }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 selection:bg-blue-600 selection:text-white antialiased">
+<body>
 
-  <div class="w-full max-w-md space-y-6">
+  <div class="login-container">
     
-    <!-- Brand Header -->
-    <div class="text-center space-y-2.5">
-      <div class="inline-flex w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 items-center justify-center shadow-xl shadow-blue-500/25 border border-blue-400/30 mb-2">
-        <i data-lucide="shield-check" class="w-8 h-8 text-white"></i>
-      </div>
-      <h1 class="text-2xl font-black text-white tracking-tight">Burmese VPN</h1>
-      <p class="text-xs text-slate-400 font-medium">Dual-Engine Enterprise Management Portal</p>
+    <div class="brand-header">
+      <div class="brand-icon">🛡️</div>
+      <h1 class="brand-title">Burmese VPN</h1>
+      <p class="brand-subtitle">Dual-Engine Enterprise Management Portal</p>
     </div>
 
-    <!-- Login Card -->
-    <div class="bg-app-surface border border-app-border rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+    <div class="login-card">
       
-      <div class="border-b border-app-border pb-4">
-        <h2 class="text-sm font-bold text-white flex items-center gap-2">
-          <i data-lucide="lock" class="w-4 h-4 text-blue-400"></i>
-          <span>Administrator Sign In</span>
-        </h2>
-        <p class="text-[11px] text-slate-400 mt-1">ဆာဗာအား စီမံခန့်ခွဲရန် လော့ဂ်အင် ဝင်ရောက်ပါ</p>
+      <div class="card-header">
+        <h2 class="card-title">🔒 Administrator Sign In</h2>
+        <p class="card-desc">ဆာဗာအား စီမံခန့်ခွဲရန် လော့ဂ်အင် ဝင်ရောက်ပါ</p>
       </div>
 
       {% if error %}
-      <div class="p-3.5 rounded-xl bg-rose-950/80 border border-rose-700/60 text-rose-300 text-xs font-semibold flex items-center gap-2">
-        <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
-        <span>{{ error }}</span>
+      <div class="error-box">
+        ⚠️ {{ error }}
       </div>
       {% endif %}
 
-      <form action="/login" method="POST" class="space-y-4">
+      <form action="/login" method="POST">
         
-        <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1.5">Username (အသုံးပြုသူအမည်)</label>
-          <div class="relative">
-            <i data-lucide="user" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="text" name="username" required value="admin" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none transition">
+        <div class="form-group">
+          <label class="form-label">Username (အသုံးပြုသူအမည်)</label>
+          <div class="input-wrapper">
+            <input type="text" name="username" required value="admin" class="form-input" autocomplete="username">
           </div>
         </div>
 
-        <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1.5">Password (စကားဝှက်)</label>
-          <div class="relative">
-            <i data-lucide="key" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-            <input type="password" name="password" required value="password" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-app-bg border border-app-border text-white text-xs focus:border-blue-500 focus:outline-none transition">
+        <div class="form-group">
+          <label class="form-label">Password (စကားဝှက်)</label>
+          <div class="input-wrapper">
+            <input type="password" name="password" required value="password" class="form-input" autocomplete="current-password">
           </div>
         </div>
 
-        <div class="p-3 rounded-xl bg-app-bg border border-app-border text-[11px] text-slate-400 flex items-center justify-between">
-          <span>Default Credentials:</span>
-          <span class="font-mono text-blue-400 font-bold">admin / password</span>
+        <div class="info-box">
+          <span>Default Login:</span>
+          <span class="info-badge">admin / password</span>
         </div>
 
-        <button type="submit" class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/25 transition flex items-center justify-center gap-2 active:scale-95">
-          <span>Sign In to Dashboard</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <button type="submit" class="btn-submit">
+          <span>Sign In to Dashboard →</span>
         </button>
 
       </form>
 
     </div>
 
-    <!-- Footer -->
-    <div class="text-center text-[11px] text-slate-500">
+    <div class="footer-text">
       🇲🇲 Burmese VPN Dual-Engine Hub • Protected Access
     </div>
 
   </div>
 
-  <script>
-    lucide.createIcons();
-  </script>
 </body>
 </html>
